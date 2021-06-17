@@ -1,3 +1,5 @@
+mod ruby;
+
 #[cfg(test)]
 mod tests {
     #[test]

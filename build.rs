@@ -37,6 +37,7 @@ fn main() {
         .header("wrapper.h")
         .clang_arg(format!("-I{}", ruby_h_path))
         .clang_arg(format!("-I{}", platform_h_path))
+        .clang_arg(format!("-I{}/ruby/backward", platform_h_path))
         .clang_arg("-fdeclspec")
         // Tell cargo to invalidate the built crate whenever any of the
         // included header files changed.
