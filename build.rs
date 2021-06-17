@@ -26,7 +26,8 @@ fn main() {
     println!("cargo:rustc-link-lib=dylib={}", ruby_library);
 
     // Tell cargo to invalidate the built crate whenever the wrapper changes
-    println!("cargo:rerun-if-changed=wrapper.h");
+    let header = "bloom.h";
+    println!("cargo:rerun-if-changed={}", header);
 
     // The bindgen::Builder is the main entry point
     // to bindgen, and lets you build up options for
@@ -34,7 +35,7 @@ fn main() {
     let bindings = bindgen::Builder::default()
         // The input header we would like to generate
         // bindings for.
-        .header("wrapper.h")
+        .header(header)
         .clang_arg(format!("-I{}", ruby_h_path))
         .clang_arg(format!("-I{}", platform_h_path))
         .clang_arg(format!("-I{}/ruby/backward", platform_h_path))
