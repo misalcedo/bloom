@@ -1,5 +1,5 @@
 [package]
-name = "ruby-ext"
+name = "bloom"
 version = "0.1.0"
 authors = ["Miguel D. Salcedo <misalcedo@github.com>"]
 edition = "2018"
