@@ -2,7 +2,7 @@
 A [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter) implementation written in Rust to as a Ruby C-extension.
 
 # Prerequisites
-To run the code you must have the following tools:
+To run the code you must have the following tools (only tested on macOS):
 * Ruby (tested on 3.0.1 installed with [rbenv](https://github.com/rbenv/rbenv))
 * Rust
 * CLang
