@@ -3,7 +3,7 @@ A [bloom filter](https://en.wikipedia.org/wiki/Bloom_filter) implementation writ
 
 # Prerequisites
 To run the code you must have the following tools:
-* Ruby
+* Ruby (tested on 3.0.1 installed with [rbenv](https://github.com/rbenv/rbenv))
 * Rust
 * CLang
 
@@ -13,6 +13,13 @@ To run the example, from the root of the repository, run `rake`. This will:
 * Generate a Bundle from the C dynamic library using Ruby's RBConfig.
 
 Then, run `rake console` to run an IRB session with the extension in scope.
+
+Lastly, use the provided `BloomFilter` class.
+
+```
+irb(main):001:0> BloomFilter
+=> BloomFilter
+```
 
 # Resources
 * [Extending Ruby with C-extensions](https://ruby-doc.com/docs/ProgrammingRuby/html/ext_ruby.html)

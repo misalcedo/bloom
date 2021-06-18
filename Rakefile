@@ -1,7 +1,7 @@
 task :compile do
     `cargo build`
 
-    Dir.chdir(File.expand_path('../target/debug', __FILE__)) do
+    Dir.chdir(File.join(__dir__, 'target/debug')) do
         lib_dir = RbConfig::CONFIG['libdir']
         ld_shared = RbConfig::CONFIG['LDSHARED']
         out_flag = RbConfig::CONFIG['OUTFLAG']
@@ -21,10 +21,11 @@ task :compile do
 end
 
 task :console do
-    require "./target/debug/bloom"
+    require "#{__dir__}/target/debug/bloom"
     require "irb"
 
-    IRB.start(__FILE__)
+    ARGV.clear()
+    IRB.start()
 end
 
 task :default => :compile
