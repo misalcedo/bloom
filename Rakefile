@@ -1,5 +1,5 @@
 task :compile do
-    `cargo build`
+    system('cargo build', exception: true)
 
     Dir.chdir(File.join(__dir__, 'target/debug')) do
         lib_dir = RbConfig::CONFIG['libdir']
@@ -14,7 +14,7 @@ task :compile do
 
         print "Executing command: #{command}"
 
-        `#{command}`
+        system(command, exception: true)
     end
 
 
