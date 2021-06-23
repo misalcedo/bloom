@@ -17,8 +17,8 @@ Then, run `rake console` to run an IRB session with the extension in scope.
 Lastly, use the provided `BloomFilter` class.
 
 ```
-irb(main):001:0> BloomFilter
-=> BloomFilter
+irb(main):001:0> BloomFilter::new
+=> #<BloomFilter:0x00007fc7a70b0970>
 ```
 
 # Resources
