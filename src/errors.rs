@@ -24,9 +24,7 @@ impl Error for BloomFilterError {}
 
 /// The kind of error that occurred in interacting with a Bloom Filter.
 #[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
-pub enum ErrorKind {
-    NotEnoughSpace,
-}
+pub enum ErrorKind {}
 
 impl Display for ErrorKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {

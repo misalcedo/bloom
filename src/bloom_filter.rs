@@ -29,7 +29,7 @@ impl BloomFilter {
     /// assert_eq!(set.insert(2), false);
     /// assert_eq!(set.contains(&2), true);
     /// ```
-    pub fn insert(&mut self, value: i32) -> bool {
+    pub fn insert(&mut self, _value: i32) -> bool {
         true
     }
 
@@ -50,7 +50,7 @@ impl BloomFilter {
     /// assert_eq!(set.contains(&1), true);
     /// assert_eq!(set.contains(&4), false);
     /// ```
-    pub fn contains(&self, value: &i32) -> bool {
+    pub fn contains(&self, _value: &i32) -> bool {
         false
     }
 }
