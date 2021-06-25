@@ -67,6 +67,12 @@ impl<T: Hash + Eq> BloomFilter<T> {
     }
 }
 
+impl<T> Drop for BloomFilter<T> {
+    fn drop(&mut self) {
+        println!("> Dropping a bloom filter!");
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::BloomFilter;

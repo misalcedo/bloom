@@ -1,12 +1,16 @@
 mod bloom_filter;
 mod errors;
-mod ruby;
 
 pub use bloom_filter::BloomFilter;
-use std::ffi::CString;
+use std::ffi::c_void;
+use std::hash::Hash;
 
 #[no_mangle]
-pub unsafe extern "C" fn Init_bloom() {
-    let class_name = CString::new("BloomFilter").expect("Invalid class name.");
-    let _ = ruby::rb_define_class(class_name.as_ptr(), ruby::rb_cObject);
+pub unsafe extern "C" fn new_bloom_filter() -> BloomFilter<i32> {
+    BloomFilter::new()
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn drop_bloom_filter(bloom_filter: BloomFilter<i32>) {
+    drop(bloom_filter)
 }
