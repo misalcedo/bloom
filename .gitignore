@@ -1,7 +1,3 @@
 /target
 Cargo.lock
-Makefile
-mkmf.log
-*.dylib
-*.o
-*.bundle
+Gemfile.lock
