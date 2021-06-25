@@ -11,8 +11,8 @@ end
 task :compile_c do
     target_dir = 'target/debug'
 
-    FileUtils.cp('wrapper/extconf.rb', target_dir)
-    FileUtils.cp('wrapper/bloom_filter.c', target_dir)
+    FileUtils.cp('extension/extconf.rb', target_dir)
+    FileUtils.cp('extension/bloom_filter.c', target_dir)
 
     Dir.chdir(File.join(__dir__, target_dir)) do
         system('ruby extconf.rb', exception: true)
