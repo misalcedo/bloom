@@ -16,6 +16,8 @@ task :compile_c do
     Dir.chdir(File.join(__dir__, target_dir)) do
         system('ruby extconf.rb', exception: true)
         system('make', exception: true)
+
+        system("ls .")
     end
 end
 
