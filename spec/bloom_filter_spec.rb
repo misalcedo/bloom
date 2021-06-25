@@ -9,7 +9,7 @@ RSpec.describe Bloom::BloomFilter do
     subject { described_class.new(42) }
 
     it "#capacity" do
-        expect { subject.capacity }.to eq 42
+        expect(subject.capacity).to eq 42
     end
   end
 end
