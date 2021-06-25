@@ -10,10 +10,24 @@ impl BloomFilter {
     ///
     /// ```
     /// use bloom::BloomFilter;
-    /// let filter: BloomFilter<i32> = BloomFilter::new();
+    /// let filter: BloomFilter = BloomFilter::new(1);
     /// ```
     pub fn new(capacity: usize) -> BloomFilter {
         BloomFilter { capacity }
+    }
+
+    /// The capacity of the `BloomFilter`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use bloom::BloomFilter;
+    /// let filter: BloomFilter = BloomFilter::new(42);
+    ///
+    /// assert_eq!(s.capacity(42), 42);
+    /// ```
+    pub fn capacity(&self) -> usize {
+        self.capacity
     }
 
     /// Adds a value to the bloom filter.
@@ -25,11 +39,11 @@ impl BloomFilter {
     /// ```
     /// use bloom::BloomFilter;
     ///
-    /// let filter: BloomFilter<i32> = BloomFilter::new();
+    /// let filter: BloomFilter = BloomFilter::new();
     ///
-    /// assert_eq!(set.insert(2), true);
-    /// assert_eq!(set.insert(2), false);
-    /// assert_eq!(set.contains(&2), true);
+    /// assert_eq!(filter.insert(2), true);
+    /// assert_eq!(filter.insert(2), false);
+    /// assert_eq!(filter.contains(&2), true);
     /// ```
     pub fn insert(&mut self, _value: i32) -> bool {
         true
@@ -45,12 +59,12 @@ impl BloomFilter {
     /// ```
     /// use bloom::BloomFilter;
     ///
-    /// let filter: BloomFilter<i32> = BloomFilter::new();
+    /// let filter: BloomFilter = BloomFilter::new();
     ///
-    /// assert_eq!(set.contains(&1), false);
+    /// assert_eq!(filter.contains(&1), false);
     /// set.insert(1);
-    /// assert_eq!(set.contains(&1), true);
-    /// assert_eq!(set.contains(&4), false);
+    /// assert_eq!(filter.contains(&1), true);
+    /// assert_eq!(filter.contains(&4), false);
     /// ```
     pub fn contains(&self, _value: &i32) -> bool {
         false
@@ -69,14 +83,14 @@ mod tests {
 
     #[test]
     fn when_empty() {
-        let filter: BloomFilter = BloomFilter::new();
+        let filter: BloomFilter = BloomFilter::new(1);
 
         assert!(!filter.contains(&1));
     }
 
     #[test]
     fn when_is_colliding_member() {
-        let mut filter = BloomFilter::new();
+        let mut filter = BloomFilter::new(1);
 
         filter.insert(1);
 
@@ -85,7 +99,7 @@ mod tests {
 
     #[test]
     fn when_is_non_colliding_member() {
-        let mut filter = BloomFilter::new();
+        let mut filter = BloomFilter::new(1);
 
         filter.insert(42);
 

@@ -14,10 +14,10 @@ To run the example, from the root of the repository, run `rake`. This will:
 
 Then, run `rake console` to run an IRB session with the extension in scope.
 
-Lastly, use the provided `BloomFilter` class.
+Lastly, use the provided `Bloom::BloomFilter` class.
 
 ```
-irb(main):001:0> BloomFilter::new
+irb(main):001:0> Bloom::BloomFilter::new
 => #<BloomFilter:0x00007fc7a70b0970>
 ```
 
