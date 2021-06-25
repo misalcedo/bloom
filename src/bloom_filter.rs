@@ -1,12 +1,7 @@
-use std::borrow::Borrow;
-use std::collections::HashSet;
-use std::hash::Hash;
+#[repr(C)]
+pub struct BloomFilter {}
 
-pub struct BloomFilter<T> {
-    set: HashSet<T>,
-}
-
-impl<T: Hash + Eq> BloomFilter<T> {
+impl BloomFilter {
     /// Creates an empty `BloomFilter`.
     ///
     /// # Examples
@@ -15,10 +10,8 @@ impl<T: Hash + Eq> BloomFilter<T> {
     /// use bloom::BloomFilter;
     /// let filter: BloomFilter<i32> = BloomFilter::new();
     /// ```
-    pub fn new() -> BloomFilter<T> {
-        BloomFilter {
-            set: HashSet::new(),
-        }
+    pub fn new() -> BloomFilter {
+        BloomFilter {}
     }
 
     /// Adds a value to the bloom filter.
@@ -36,15 +29,14 @@ impl<T: Hash + Eq> BloomFilter<T> {
     /// assert_eq!(set.insert(2), false);
     /// assert_eq!(set.contains(&2), true);
     /// ```
-    pub fn insert(&mut self, value: T) -> bool {
-        self.set.insert(value)
+    pub fn insert(&mut self, value: i32) -> bool {
+        true
     }
 
     /// Returns `true` if the filter contains a value.
     ///
     /// The value may be any borrowed form of the filter's value type, but
-    /// [`Hash`] and [`Eq`] on the borrowed form *must* match those for
-    /// the value type.
+    /// [`Eq`] on the borrowed form *must* match those for the value type.
     ///
     /// # Examples
     ///
@@ -58,16 +50,12 @@ impl<T: Hash + Eq> BloomFilter<T> {
     /// assert_eq!(set.contains(&1), true);
     /// assert_eq!(set.contains(&4), false);
     /// ```
-    pub fn contains<Q: ?Sized>(&self, value: &Q) -> bool
-    where
-        T: Borrow<Q>,
-        Q: Hash + Eq,
-    {
-        self.set.contains(value)
+    pub fn contains(&self, value: &i32) -> bool {
+        false
     }
 }
 
-impl<T> Drop for BloomFilter<T> {
+impl Drop for BloomFilter {
     fn drop(&mut self) {
         println!("> Dropping a bloom filter!");
     }
@@ -79,7 +67,7 @@ mod tests {
 
     #[test]
     fn when_empty() {
-        let filter: BloomFilter<i32> = BloomFilter::new();
+        let filter: BloomFilter = BloomFilter::new();
 
         assert!(!filter.contains(&1));
     }

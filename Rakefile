@@ -1,6 +1,8 @@
-task :compile do
+task :compile_cargo do
     system('cargo build', exception: true)
+end
 
+task :compile_c do
     target_dir = 'target/debug'
 
     FileUtils.cp('wrapper/extconf.rb', target_dir)
@@ -10,6 +12,9 @@ task :compile do
         system('ruby extconf.rb', exception: true)
         system('make', exception: true)
     end
+end
+
+task :compile => [:compile_cargo, :compile_c] do
 end
 
 task :console => [:compile] do
