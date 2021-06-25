@@ -1,5 +1,7 @@
 #[repr(C)]
-pub struct BloomFilter {}
+pub struct BloomFilter {
+    capacity: usize,
+}
 
 impl BloomFilter {
     /// Creates an empty `BloomFilter`.
@@ -10,8 +12,8 @@ impl BloomFilter {
     /// use bloom::BloomFilter;
     /// let filter: BloomFilter<i32> = BloomFilter::new();
     /// ```
-    pub fn new() -> BloomFilter {
-        BloomFilter {}
+    pub fn new(capacity: usize) -> BloomFilter {
+        BloomFilter { capacity }
     }
 
     /// Adds a value to the bloom filter.

@@ -4,8 +4,8 @@ mod errors;
 pub use bloom_filter::BloomFilter;
 
 #[no_mangle]
-pub unsafe extern "C" fn new_bloom_filter() -> *mut BloomFilter {
-    Box::into_raw(Box::new(BloomFilter::new()))
+pub unsafe extern "C" fn new_bloom_filter(capacity: usize) -> *mut BloomFilter {
+    Box::into_raw(Box::new(BloomFilter::new(capacity)))
 }
 
 #[no_mangle]
