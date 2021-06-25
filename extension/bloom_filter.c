@@ -13,7 +13,7 @@ static VALUE bloom_filter_initialize(VALUE self)
 VALUE bloom_filter_new(VALUE class, VALUE capacity) {
     Check_Type(capacity, T_FIXNUM);
 
-    BloomFilter *bloom_filter = BloomFilterNew(NUM2UINT(capacity));
+    BloomFilter *bloom_filter = BloomFilterNew(NUM2ULONG(capacity));
 
     VALUE tdata = Data_Wrap_Struct(class, 0, bloom_filter_free, bloom_filter);
     VALUE argv[0];
@@ -31,7 +31,7 @@ static VALUE bloom_filter_capacity(VALUE self)
 
     unsigned long capacity = BloomFilterCapacity(ptr);
 
-    return INT2NUM(capacity);
+    return ULONG2NUM(capacity);
 }
 
 void Init_bloom_filter() {
