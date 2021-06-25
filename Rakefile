@@ -11,7 +11,7 @@ end
 task :compile_c do
     target_dir = 'target/debug'
 
-    FileUtils.cp(Dir.glob('extension/**'), target_dir)
+    FileUtils.cp_r('extension/.', target_dir)
 
     Dir.chdir(File.join(__dir__, target_dir)) do
         system('ruby extconf.rb', exception: true)
