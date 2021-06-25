@@ -38,6 +38,4 @@ jobs:
           rustup update ${{ matrix.rust }} --no-self-update
           rustup default ${{ matrix.rust }}
       - name: Run tests
-        run: ls target/debug
-      - name: Run tests
         run: bundle exec rake
