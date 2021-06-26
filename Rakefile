@@ -14,7 +14,10 @@ task :compile_c do
     FileUtils.cp_r("extension/.", target_dir)
 
     Dir.chdir(File.join(__dir__, target_dir)) do
-        system("ruby extconf.rb", exception: true)
+        FileUtils.cp(Dir.glob("libbloom.*"), "lib")
+        FileUtils.cp("bloom.h", "include")
+
+        system("ruby extconf.rb --with-bloom-dir=#{Dir.pwd}", exception: true)
         system("make", exception: true)
     end
 end
