@@ -28,9 +28,7 @@ task :compile_c do
         end
 
         system("ruby extconf.rb --with-bloom-dir=#{Dir.pwd}", exception: true)
-        system("make", exception: true)
-        
-        p Dir.new(Dir.pwd).children
+        system("make", exception: true)        
     end
 end
 
