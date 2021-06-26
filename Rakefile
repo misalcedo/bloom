@@ -1,31 +1,38 @@
-task :compile do
-    system('cargo build', exception: true)
+require 'rspec/core/rake_task'
 
-    Dir.chdir(File.join(__dir__, 'target/debug')) do
-        lib_dir = RbConfig::CONFIG['libdir']
-        ld_shared = RbConfig::CONFIG['LDSHARED']
-        out_flag = RbConfig::CONFIG['OUTFLAG']
-        ld_flags = RbConfig::CONFIG['LDFLAGS']
-        dld_flags = RbConfig::CONFIG['DLDFLAGS']
-        args_shared = RbConfig::CONFIG['LIBRUBYARG_SHARED']
-        dl_ext = RbConfig::CONFIG['DLEXT']
-
-        command = "#{ld_shared} #{out_flag}bloom.#{dl_ext} libbloom.dylib #{ld_flags}#{dld_flags} #{args_shared}"
-
-        print "Executing command: #{command}"
-
-        system(command, exception: true)
-    end
-
-
+RSpec::Core::RakeTask.new(:test) do |t|
+    t.rspec_opts = ["-I#{__dir__}/target/debug"]
 end
 
-task :console do
-    require "#{__dir__}/target/debug/bloom"
+task :compile_cargo do
+    system("cargo build", exception: true)
+end
+
+task :compile_c do
+    target_dir = "target/debug"
+
+    FileUtils.cp_r("extension/.", target_dir)
+
+    Dir.chdir(File.join(__dir__, target_dir)) do
+      FileUtils.mkdir_p("include")
+      FileUtils.mkdir_p("lib")
+
+      FileUtils.cp("bloom.h", "include/")
+      FileUtils.cp(Dir.glob("libbloom.*"), "lib/")
+
+        system("ruby extconf.rb --with-bloom-dir=#{Dir.pwd}", exception: true)
+        system("make", exception: true)
+    end
+end
+
+task :compile => [:compile_cargo, :compile_c]
+
+task :console => [:compile] do
+    require "#{__dir__}/target/debug/bloom_filter"
     require "irb"
 
     ARGV.clear()
     IRB.start()
 end
 
-task :default => :compile
+task :default => [:compile, :test]

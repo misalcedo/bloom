@@ -1,12 +1,19 @@
 mod bloom_filter;
 mod errors;
-mod ruby;
 
 pub use bloom_filter::BloomFilter;
-use std::ffi::CString;
 
 #[no_mangle]
-pub unsafe extern "C" fn Init_bloom() {
-    let class_name = CString::new("BloomFilter").expect("Invalid class name.");
-    let _ = ruby::rb_define_class(class_name.as_ptr(), ruby::rb_cObject);
+pub unsafe extern "C" fn BloomFilterNew(capacity: usize) -> *mut BloomFilter {
+    Box::into_raw(Box::new(BloomFilter::new(capacity)))
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn BloomFilterDrop(bloom_filter: *mut BloomFilter) {
+    drop(Box::from_raw(bloom_filter))
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn BloomFilterCapacity(bloom_filter: *mut BloomFilter) -> usize {
+    Box::from_raw(bloom_filter).capacity()
 }
