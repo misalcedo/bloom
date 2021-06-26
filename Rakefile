@@ -16,14 +16,19 @@ task :compile_c do
     FileUtils.cp_r(File.join("extension", "."), target_dir)
 
     Dir.chdir(target_dir) do
-      FileUtils.mkdir_p("include")
-      FileUtils.mkdir_p("lib")
+        FileUtils.mkdir_p("include")
+        FileUtils.mkdir_p("lib")
 
-      FileUtils.cp("bloom.h", "include")
-      FileUtils.cp(Dir.glob("libbloom.*"), "lib")
+        FileUtils.cp("bloom.h", "include", verbose: true)
+        
+        if Gem.win_platform?
+            FileUtils.cp(["bloom.d", "bloom.dll", "bloom.dll.exp", "bloom.dll.lib"], "lib", verbose: true)
+        else
+            FileUtils.cp(Dir.glob("libbloom.*"), "lib", verbose: true)
+        end
 
         system("ruby extconf.rb --with-bloom-dir=#{Dir.pwd}", exception: true)
-        system("make", exception: true)
+        system("make", exception: true)        
     end
 end
 
