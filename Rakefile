@@ -5,17 +5,17 @@ RSpec::Core::RakeTask.new(:test) do |t|
 end
 
 task :compile_cargo do
-    system('cargo build', exception: true)
+    system("cargo build", exception: true)
 end
 
 task :compile_c do
-    target_dir = 'target/debug'
+    target_dir = "target/debug"
 
-    FileUtils.cp_r('extension/.', target_dir)
+    FileUtils.cp_r("extension/.", target_dir)
 
     Dir.chdir(File.join(__dir__, target_dir)) do
-        system('ruby extconf.rb', exception: true)
-        system('make', exception: true)
+        system("ruby extconf.rb", exception: true)
+        system("make", exception: true)
     end
 end
 
