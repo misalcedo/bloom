@@ -14,10 +14,11 @@ task :compile_c do
     FileUtils.cp_r("extension/.", target_dir)
 
     Dir.chdir(File.join(__dir__, target_dir)) do
-        FileUtils.cp("bloom.h", "include")
-        Dir.glob("libbloom.*").each do |filename|
-            FileUtils.cp(filename, "lib") unless File.symlink?(filename)
-        end
+      FileUtils.mkdir_p("include")
+      FileUtils.mkdir_p("lib")
+
+      FileUtils.cp("bloom.h", "include/")
+      FileUtils.cp(Dir.glob("libbloom.*"), "lib/")
 
         system("ruby extconf.rb --with-bloom-dir=#{Dir.pwd}", exception: true)
         system("make", exception: true)
