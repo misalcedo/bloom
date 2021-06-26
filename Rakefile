@@ -22,7 +22,8 @@ task :compile_c do
         FileUtils.cp("bloom.h", "include", verbose: true)
         
         if Gem.win_platform?
-            FileUtils.cp(["bloom.d", "bloom.dll", "bloom.dll.exp", "bloom.dll.lib"], "lib", verbose: true)
+            system("gendef bloom.dll", exception: true)
+            FileUtils.cp(["bloom.d", "bloom.def", "bloom.dll", "bloom.dll.exp", "bloom.dll.lib", "bloom.pdb"], "lib", verbose: true)
         else
             Dir.glob("libbloom.*").each do |filename|
                 destination = File.join("lib", filename)
