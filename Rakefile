@@ -25,13 +25,8 @@ task :compile_c do
             FileUtils.cp(["bloom.d", "bloom.dll", "bloom.dll.exp", "bloom.dll.lib"], "lib", verbose: true)
         else
             Dir.glob("libbloom.*").each do |filename|
-                if File.symlink?(filename)
-                    destination = File.join("lib", filename)
-                    FileUtils.rm_f(destination, verbose: true)
-                    FileUtils.copy_entry(filename, destination, verbose: true)
-                else
-                    FileUtils.cp(filename, "lib", verbose: true)
-                end
+                destination = File.join("lib", filename)
+                FileUtils.cp_r(filename, destination, verbose: true)
             end
         end
 
