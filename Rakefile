@@ -22,9 +22,9 @@ task :compile_c do
         FileUtils.cp("bloom.h", "include")
         
         if Gem.win_platform?
-            FileUtils.cp(["bloom.d", "bloom.dll", "bloom.dll.exp", "bloom.dll.lib"], "lib")
+            FileUtils.cp(["bloom.d", "bloom.dll", "bloom.dll.exp", "bloom.dll.lib"], "lib", verbose: true)
         else
-            FileUtils.cp(Dir.glob("libbloom.*"), "lib")
+            FileUtils.cp(Dir.glob("libbloom.*"), "lib", verbose: true)
         end
 
         system("ruby extconf.rb --with-bloom-dir=#{Dir.pwd}", exception: true)
