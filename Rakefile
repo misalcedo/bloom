@@ -13,7 +13,7 @@ task :compile_cargo do
 end
 
 task :compile_c do
-    FileUtils.cp_r(File.join("extension". "."), target_dir)
+    FileUtils.cp_r(File.join("extension", "."), target_dir)
 
     Dir.chdir(target_dir) do
       FileUtils.mkdir_p("include")
