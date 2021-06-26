@@ -18,9 +18,7 @@ Then, run `rake test` to execute unit tests or `rake console` to run an IRB sess
 Lastly, use the provided `Bloom::BloomFilter` class.
 
 ```
-irb(main):001:0> require "bloom_filter"
-=> true
-irb(main):002:0> Bloom::BloomFilter::new(42)
+irb(main):001:0> Bloom::BloomFilter::new(42)
 => #<Bloom::BloomFilter:0x00007fc7a70b0970>
 ```
 
