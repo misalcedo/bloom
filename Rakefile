@@ -5,6 +5,7 @@ def target_dir
 end
 
 RSpec::Core::RakeTask.new(:test) do |t|
+    ENV["RUBY_DLL_PATH"] = target_dir if Gem.win_platform?
     t.rspec_opts = ["-I#{target_dir}"]
 end
 
@@ -39,11 +40,9 @@ end
 task :compile => [:compile_cargo, :compile_c]
 
 task :console => [:compile] do
-    require File.join(target_dir, "bloom_filter")
-    require "irb"
+    ENV["RUBY_DLL_PATH"] = target_dir if Gem.win_platform?
 
-    ARGV.clear()
-    IRB.start()
+    exec("irb -I#{target_dir} -rbloom_filter")
 end
 
 task :clean do
