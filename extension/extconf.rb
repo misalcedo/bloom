@@ -1,4 +1,5 @@
 require "mkmf"
 
-have_library("libbloom", "BloomFilterNew")
+have_library("bloom", "BloomFilterNew")
+have_header("bloom.h")
 create_makefile("bloom_filter")
