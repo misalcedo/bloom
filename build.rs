@@ -12,10 +12,14 @@ fn main() {
         .join(profile)
         .join("bloom.h");
 
+    let mut config: cbindgen::Config = Default::default();
+    config.function.prefix = Some("__declspec(dllexport)".to_string());
+    config.language = cbindgen::Language::C;
+    config.pragma_once = true;
+
     cbindgen::Builder::new()
         .with_crate(crate_dir)
-        .with_language(cbindgen::Language::C)
-        .with_pragma_once(true)
+        .with_config(config)
         .generate()
         .expect("Unable to generate bindings")
         .write_to_file(header_path);
