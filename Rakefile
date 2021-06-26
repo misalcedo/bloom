@@ -19,7 +19,7 @@ task :compile_c do
         FileUtils.mkdir_p("include")
         FileUtils.mkdir_p("lib")
 
-        FileUtils.cp("bloom.h", "include")
+        FileUtils.cp("bloom.h", "include", verbose: true)
         
         if Gem.win_platform?
             FileUtils.cp(["bloom.d", "bloom.dll", "bloom.dll.exp", "bloom.dll.lib"], "lib", verbose: true)
