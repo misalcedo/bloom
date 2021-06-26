@@ -24,7 +24,13 @@ task :compile_c do
         if Gem.win_platform?
             FileUtils.cp(["bloom.d", "bloom.dll", "bloom.dll.exp", "bloom.dll.lib"], "lib", verbose: true)
         else
-            FileUtils.cp(Dir.glob("libbloom.*"), "lib", verbose: true)
+            Dir.glob("libbloom.*").each do |filename|
+                if File.symlink?(filename)
+                    FileUtils.copy_entry(filename, File.join("lib", filename), verbose: true, remove_destination: true)
+                else
+                    FileUtils.cp(filename, "lib", verbose: true)
+                end
+            end
         end
 
         system("ruby extconf.rb --with-bloom-dir=#{Dir.pwd}", exception: true)
@@ -40,6 +46,10 @@ task :console => [:compile] do
 
     ARGV.clear()
     IRB.start()
+end
+
+task :clean do
+    system("cargo clean", exception: true)
 end
 
 task :default => [:compile, :test]
