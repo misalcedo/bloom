@@ -15,5 +15,5 @@ pub unsafe extern "C" fn BloomFilterDrop(bloom_filter: *mut BloomFilter) {
 
 #[no_mangle]
 pub unsafe extern "C" fn BloomFilterCapacity(bloom_filter: *mut BloomFilter) -> usize {
-    Box::from_raw(bloom_filter).capacity()
+    &*bloom_filter.capacity()
 }
