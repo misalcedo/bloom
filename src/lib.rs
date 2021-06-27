@@ -2,18 +2,25 @@ mod bloom_filter;
 mod errors;
 
 pub use bloom_filter::BloomFilter;
+use libc::size_t;
 
 #[no_mangle]
-pub unsafe extern "C" fn BloomFilterNew(capacity: usize) -> *mut BloomFilter {
+pub unsafe extern "C" fn BloomFilterNew(capacity: size_t) -> *mut BloomFilter {
     Box::into_raw(Box::new(BloomFilter::new(capacity)))
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn BloomFilterDrop(bloom_filter: *mut BloomFilter) {
-    drop(Box::from_raw(bloom_filter))
+    if !bloom_filter.is_null() {
+        Box::from_raw(bloom_filter);
+    }
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn BloomFilterCapacity(bloom_filter: *mut BloomFilter) -> usize {
-    &*bloom_filter.capacity()
+pub unsafe extern "C" fn BloomFilterCapacity(bloom_filter: *const BloomFilter) -> usize {
+    if bloom_filter.is_null() {
+        0
+    } else {
+        (&*bloom_filter).capacity()
+    }
 }
