@@ -17,7 +17,7 @@ pub unsafe extern "C" fn BloomFilterDrop(bloom_filter: *mut BloomFilter) {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn BloomFilterCapacity(bloom_filter: Option<&BloomFilter>) -> usize {
+pub unsafe extern "C" fn BloomFilterCapacity(bloom_filter: Option<&BloomFilter>) -> size_t {
     match bloom_filter {
         Some(bloom_filter) => bloom_filter.capacity(),
         None => 0,
