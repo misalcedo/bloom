@@ -9,11 +9,15 @@ RSpec::Core::RakeTask.new(:test) do |t|
     t.rspec_opts = ["-I#{target_dir}"]
 end
 
-task :compile_cargo do
+task :cargo_build do
     system("cargo build", exception: true)
 end
 
-task :compile_c do
+task :cargo_test do
+    system("cargo test", exception: true)
+end
+
+task :compile do
     FileUtils.cp_r(File.join("extension", "."), target_dir)
 
     Dir.chdir(target_dir) do
@@ -37,8 +41,6 @@ task :compile_c do
     end
 end
 
-task :compile => [:compile_cargo, :compile_c]
-
 task :console => [:compile] do
     ENV["RUBY_DLL_PATH"] = target_dir if Gem.win_platform?
 
@@ -49,4 +51,4 @@ task :clean do
     system("cargo clean", exception: true)
 end
 
-task :default => [:compile, :test]
+task :default => [:cargo_build, :cargo_test, :compile, :test]

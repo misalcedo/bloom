@@ -11,9 +11,9 @@ To run the code you must have the following tools (only tested on macOS):
 To run the example, from the root of the repository, run `rake`. This will:
 * Install Ruby dependencies with `bundler install`.
 * Compile the rust crate with `cargo build`.
-* Generate a Bundle from the C dynamic library using Ruby's mkmf tooling with `rake compile_c`.
+* Generate a Bundle from the C dynamic library using Ruby's mkmf tooling with `rake compile`.
 
-Then, run `rake test` to execute unit tests or `rake console` to run an IRB session with the extension in scope.
+Then, run `rake` to execute unit tests or `rake console` to run an IRB session with the extension in scope.
 
 Lastly, use the provided `Bloom::BloomFilter` class.
 

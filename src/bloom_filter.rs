@@ -1,6 +1,7 @@
-#[repr(C)]
+use std::collections::HashSet;
+
 pub struct BloomFilter {
-    capacity: usize,
+    set: HashSet<i32>,
 }
 
 impl BloomFilter {
@@ -13,7 +14,9 @@ impl BloomFilter {
     /// let filter: BloomFilter = BloomFilter::new(1);
     /// ```
     pub fn new(capacity: usize) -> BloomFilter {
-        BloomFilter { capacity }
+        BloomFilter {
+            set: HashSet::with_capacity(capacity),
+        }
     }
 
     /// The capacity of the `BloomFilter`.
@@ -27,7 +30,7 @@ impl BloomFilter {
     /// assert_eq!(s.capacity(42), 42);
     /// ```
     pub fn capacity(&self) -> usize {
-        self.capacity
+        self.set.capacity()
     }
 
     /// Adds a value to the bloom filter.
@@ -45,8 +48,8 @@ impl BloomFilter {
     /// assert_eq!(filter.insert(2), false);
     /// assert_eq!(filter.contains(&2), true);
     /// ```
-    pub fn insert(&mut self, _value: i32) -> bool {
-        true
+    pub fn insert(&mut self, value: i32) -> bool {
+        self.set.insert(value)
     }
 
     /// Returns `true` if the filter contains a value.
@@ -66,8 +69,8 @@ impl BloomFilter {
     /// assert_eq!(filter.contains(&1), true);
     /// assert_eq!(filter.contains(&4), false);
     /// ```
-    pub fn contains(&self, _value: &i32) -> bool {
-        false
+    pub fn contains(&self, value: &i32) -> bool {
+        self.set.contains(value)
     }
 }
 
