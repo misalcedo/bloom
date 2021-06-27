@@ -6,7 +6,7 @@ end
 
 RSpec::Core::RakeTask.new(:test) do |t|
     ENV["RUBY_DLL_PATH"] = target_dir if Gem.win_platform?
-    t.rspec_opts = ["-I#{target_dir} --failure-exit-code 92"]
+    t.rspec_opts = ["-I#{target_dir} --trace"]
 end
 
 task :compile_cargo do
