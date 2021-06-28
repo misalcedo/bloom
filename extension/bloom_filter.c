@@ -1,4 +1,5 @@
 #include <ruby.h>
+#include <ruby/encoding.h>
 #include <bloom.h>
 
 static void bloom_filter_free(void *p) {
@@ -34,10 +35,38 @@ static VALUE bloom_filter_capacity(VALUE self)
     return SIZET2NUM(capacity);
 }
 
+static VALUE bloom_filter_insert(VALUE self, VALUE value)
+{
+    Check_Type(value, T_STRING);
+
+    BloomFilter *ptr;
+
+    Data_Get_Struct(self, BloomFilter, ptr);
+
+    bool already_contains = BloomFilterInsert(ptr, RSTRING_PTR(value));
+
+    return already_contains ? Qtrue : Qfalse;
+}
+
+static VALUE bloom_filter_contains(VALUE self, VALUE value)
+{
+    Check_Type(value, T_STRING);
+
+    BloomFilter *ptr;
+
+    Data_Get_Struct(self, BloomFilter, ptr);
+
+    bool contains = BloomFilterContains(ptr, RSTRING_PTR(value));
+
+    return contains ? Qtrue : Qfalse;
+}
+
 void Init_bloom_filter() {
     VALUE module = rb_define_module("Bloom");
     VALUE class = rb_define_class_under(module, "BloomFilter", rb_cObject);
     rb_define_singleton_method(class, "new", bloom_filter_new, 1);
     rb_define_method(class, "initialize", bloom_filter_initialize, 0);
     rb_define_method(class, "capacity", bloom_filter_capacity, 0);
+    rb_define_method(class, "add", bloom_filter_insert, 1);
+    rb_define_method(class, "include?", bloom_filter_contains, 1);
 }

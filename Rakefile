@@ -46,6 +46,14 @@ task :console => [:compile] do
     exec("irb -I#{target_dir} -rbloom_filter")
 end
 
+task :bench do
+    ENV["RUBY_DLL_PATH"] = target_dir if Gem.win_platform?
+
+    file_path = File.join("lib", "bloom_bench.rb")
+
+    exec("ruby -I#{target_dir} -Ilib -rbloom_filter -rbenchmark #{file_path}")
+end
+
 task :clean do
     system("cargo clean", exception: true)
 end
