@@ -33,12 +33,6 @@ impl BloomFilter {
     }
 }
 
-impl Drop for BloomFilter {
-    fn drop(&mut self) {
-        println!("> Dropping a bloom filter!");
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::BloomFilter;

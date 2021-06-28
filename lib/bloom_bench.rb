@@ -24,16 +24,16 @@ module BloomBench
     raise "Invalid capacity." unless bloom_filter.capacity >= 42
 
     1.upto(items) do |n|
-      bloom_filter.add(n) if n.even?
+      bloom_filter.add("#{n}") if n.even?
     end
 
     1.upto(items) do |n|
-      raise "Invalid membership check." if n.even? && !bloom_filter.include?(n)
+      raise "Invalid membership check." if n.even? && !bloom_filter.include?("#{n}")
     end
   end
 end
 
-n = 1_000_000
+n = 10_000
 Benchmark.bm do |x|
   x.report("Pure Ruby") do
     n.times do
@@ -43,7 +43,7 @@ Benchmark.bm do |x|
 
   x.report("Rust via C-API") do
     n.times do
-      exercise { |capacity| Bloom::BloomFilter.new(capacity) }
+      BloomBench.exercise { |capacity| Bloom::BloomFilter.new(capacity) }
     end
   end
 
