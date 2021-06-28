@@ -12,19 +12,19 @@ RSpec.describe Bloom::BloomFilter do
         expect(subject.capacity).to be >= 1
     end
 
-    describe "#contains" do
+    describe "#include?" do
       it "when not in the data structure" do
-        expect(subject.contains("foo")).to eq false
+        expect(subject).to_not include("foo")
       end
 
       it "when in the data structure" do
-        subject.insert("foo")
-        expect(subject.contains("foo")).to eq true
+        subject.add("foo")
+        expect(subject).to include("foo")
       end
 
       skip "when potentially in the data structure", "until the bloom filter is probabilistic" do
-        subject.insert("bar")
-        expect(subject.contains("foo")).to eq true
+        subject.add("bar")
+        expect(subject).to include("foo")
       end
     end
   end

@@ -67,6 +67,6 @@ void Init_bloom_filter() {
     rb_define_singleton_method(class, "new", bloom_filter_new, 1);
     rb_define_method(class, "initialize", bloom_filter_initialize, 0);
     rb_define_method(class, "capacity", bloom_filter_capacity, 0);
-    rb_define_method(class, "insert", bloom_filter_insert, 1);
-    rb_define_method(class, "contains", bloom_filter_contains, 1);
+    rb_define_method(class, "add", bloom_filter_insert, 1);
+    rb_define_method(class, "include?", bloom_filter_contains, 1);
 }
