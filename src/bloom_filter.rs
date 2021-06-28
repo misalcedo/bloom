@@ -1,19 +1,18 @@
-use digest::{Digest, Output};
-use sha3::Sha3_512;
+use openssl::sha;
 
 pub struct BloomFilter {
     counts: Vec<bool>,
 }
 
-fn hash<T: Digest>(value: &[u8]) -> Output<T> {
-    let mut hasher = T::new();
+fn hash(value: &[u8]) -> [u8; 64] {
+    let mut hasher = sha::Sha512::new();
 
     hasher.update(value);
 
-    hasher.digest
+    hasher.finish()
 }
 
-fn indices<T: Digest>(hash: &Output<T>) -> &[usize] {
+fn indices(hash: &[u8]) -> &[usize] {
     let (_prefix, indices, _suffix) = unsafe { hash.align_to::<usize>() };
 
     indices
@@ -38,8 +37,8 @@ impl BloomFilter {
     pub fn insert(&mut self, value: &[u8]) -> bool {
         let mut contained = true;
         let n = self.counts.len();
-        let output = hash::<Sha3_512>(value);
-        let indices = indices::<Sha3_512>(&output);
+        let output = hash(value);
+        let indices = indices(&output);
 
         for i in indices {
             if let Some(marked) = self.counts.get_mut(i % n) {
@@ -58,8 +57,8 @@ impl BloomFilter {
     pub fn contains(&self, value: &[u8]) -> bool {
         let mut contained = true;
         let n = self.counts.len();
-        let output = hash::<Sha3_512>(value);
-        let indices = indices::<Sha3_512>(&output);
+        let output = hash(value);
+        let indices = indices(&output);
 
         for i in indices {
             if let Some(marked) = self.counts.get(i % n) {
