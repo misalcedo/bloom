@@ -43,5 +43,5 @@ jobs:
         run: cargo test
       - name: Build Extension
         run: bundle exec rake compile
-      - name: test Extension
+      - name: Test Extension
         run: bundle exec rake test
