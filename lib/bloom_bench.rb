@@ -1,20 +1,33 @@
 require 'set'
+require 'openssl'
 
 module BloomBench
   class BloomFilter
-    attr_reader :capacity
-
     def initialize(capacity)
-      @capacity = capacity
-      @set = Set.new
+      @digest = 'SHA512'
+      @markers = Array.new(capacity, false)
+    end
+
+    def capacity
+      @markers.size
     end
 
     def add(value)
-      !@set.add?(value)
+      contained = true
+
+      digest = OpenSSL::Digest.new(@digest).digest(value.to_s)
+      digest.unpack("J*").each do |i|
+        index = i % self.capacity
+        contained &&= @markers[index]
+        @markers[index] = true
+      end
+
+      contained
     end
 
     def include?(value)
-      @set.include?(value)
+      digest = OpenSSL::Digest.new(@digest).digest(value.to_s)
+      digest.unpack("J*").all? { |i| @markers[index = i % self.capacity] }
     end
   end
 
@@ -33,7 +46,7 @@ module BloomBench
   end
 end
 
-n = 10_000
+n = 1_000
 Benchmark.bm do |x|
   x.report("Pure Ruby") do
     n.times do

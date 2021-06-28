@@ -10,7 +10,7 @@ fn hash<T: Digest>(value: &[u8]) -> Output<T> {
 
     hasher.update(value);
 
-    hasher.finalize()
+    hasher.digest
 }
 
 fn indices<T: Digest>(hash: &Output<T>) -> &[usize] {
