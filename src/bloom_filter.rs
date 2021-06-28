@@ -1,7 +1,8 @@
+use bitvec::prelude::*;
 use openssl::sha;
 
 pub struct BloomFilter {
-    counts: Vec<bool>,
+    counts: BitVec,
 }
 
 fn hash(value: &[u8]) -> [u8; 64] {
@@ -22,7 +23,7 @@ impl BloomFilter {
     /// Creates an empty `BloomFilter` with the given capacity.
     pub fn new(capacity: usize) -> BloomFilter {
         BloomFilter {
-            counts: vec![false; capacity],
+            counts: bitvec![0; capacity],
         }
     }
 
@@ -41,7 +42,7 @@ impl BloomFilter {
         let indices = indices(&output);
 
         for i in indices {
-            if let Some(marked) = self.counts.get_mut(i % n) {
+            if let Some(mut marked) = self.counts.get_mut(i % n) {
                 contained = *marked && contained;
                 *marked = true;
             }
