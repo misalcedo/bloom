@@ -36,8 +36,8 @@ pub unsafe extern "C" fn BloomFilterInsert(
 
     let value = CStr::from_ptr(value);
 
-    match (bloom_filter, value.to_str()) {
-        (Some(bloom_filter), Ok(value)) => bloom_filter.insert(value),
+    match bloom_filter {
+        Some(bloom_filter) => bloom_filter.insert(value.to_bytes()),
         _ => false,
     }
 }
@@ -53,8 +53,8 @@ pub unsafe extern "C" fn BloomFilterContains(
 
     let value = CStr::from_ptr(value);
 
-    match (bloom_filter, value.to_str()) {
-        (Some(bloom_filter), Ok(value)) => bloom_filter.contains(value),
+    match bloom_filter {
+        Some(bloom_filter) => bloom_filter.contains(value.to_bytes()),
         _ => false,
     }
 }
