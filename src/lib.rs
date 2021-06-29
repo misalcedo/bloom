@@ -6,19 +6,19 @@ use libc::{c_char, size_t};
 use std::ffi::CStr;
 
 #[no_mangle]
-pub unsafe extern "C" fn BloomFilterNew(capacity: size_t) -> *mut BloomFilter {
+pub unsafe extern "C" fn bloom_new(capacity: size_t) -> *mut BloomFilter {
     Box::into_raw(Box::new(BloomFilter::new(capacity)))
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn BloomFilterDrop(bloom_filter: *mut BloomFilter) {
+pub unsafe extern "C" fn bloom_drop(bloom_filter: *mut BloomFilter) {
     if !bloom_filter.is_null() {
         Box::from_raw(bloom_filter);
     }
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn BloomFilterCapacity(bloom_filter: Option<&BloomFilter>) -> size_t {
+pub unsafe extern "C" fn bloom_capacity(bloom_filter: Option<&BloomFilter>) -> size_t {
     match bloom_filter {
         Some(bloom_filter) => bloom_filter.capacity(),
         None => 0,
@@ -26,7 +26,7 @@ pub unsafe extern "C" fn BloomFilterCapacity(bloom_filter: Option<&BloomFilter>)
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn BloomFilterInsert(
+pub unsafe extern "C" fn bloom_insert(
     bloom_filter: Option<&mut BloomFilter>,
     value: *const c_char,
 ) -> bool {
@@ -43,7 +43,7 @@ pub unsafe extern "C" fn BloomFilterInsert(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn BloomFilterContains(
+pub unsafe extern "C" fn bloom_contains(
     bloom_filter: Option<&BloomFilter>,
     value: *const c_char,
 ) -> bool {

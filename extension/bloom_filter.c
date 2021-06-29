@@ -3,7 +3,7 @@
 #include <bloom.h>
 
 static void bloom_filter_free(void *p) {
-    BloomFilterDrop(p);
+    bloom_drop(p);
 }
 
 static VALUE bloom_filter_initialize(VALUE self)
@@ -14,7 +14,7 @@ static VALUE bloom_filter_initialize(VALUE self)
 VALUE bloom_filter_new(VALUE class, VALUE capacity) {
     Check_Type(capacity, T_FIXNUM);
 
-    BloomFilter *bloom_filter = BloomFilterNew(NUM2SIZET(capacity));
+    BloomFilter *bloom_filter = bloom_new(NUM2SIZET(capacity));
 
     VALUE tdata = Data_Wrap_Struct(class, 0, bloom_filter_free, bloom_filter);
     VALUE argv[0];
@@ -30,7 +30,7 @@ static VALUE bloom_filter_capacity(VALUE self)
 
     Data_Get_Struct(self, BloomFilter, ptr);
 
-    unsigned long capacity = BloomFilterCapacity(ptr);
+    unsigned long capacity = bloom_capacity(ptr);
 
     return SIZET2NUM(capacity);
 }
@@ -43,7 +43,7 @@ static VALUE bloom_filter_insert(VALUE self, VALUE value)
 
     Data_Get_Struct(self, BloomFilter, ptr);
 
-    bool already_contains = BloomFilterInsert(ptr, RSTRING_PTR(value));
+    bool already_contains = bloom_insert(ptr, RSTRING_PTR(value));
 
     return already_contains ? Qtrue : Qfalse;
 }
@@ -56,7 +56,7 @@ static VALUE bloom_filter_contains(VALUE self, VALUE value)
 
     Data_Get_Struct(self, BloomFilter, ptr);
 
-    bool contains = BloomFilterContains(ptr, RSTRING_PTR(value));
+    bool contains = bloom_contains(ptr, RSTRING_PTR(value));
 
     return contains ? Qtrue : Qfalse;
 }
