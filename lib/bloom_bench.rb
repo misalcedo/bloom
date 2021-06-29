@@ -1,36 +1,8 @@
-require 'set'
-require 'openssl'
+require "bloom_ruby"
+require "bloom_filter"
+require "bloom_ffi"
 
 module BloomBench
-  class BloomFilter
-    def initialize(capacity)
-      @digest = 'SHA512'
-      @markers = Array.new(capacity, false)
-    end
-
-    def capacity
-      @markers.size
-    end
-
-    def add(value)
-      contained = true
-
-      digest = OpenSSL::Digest.new(@digest).digest(value.to_s)
-      digest.unpack("J*").each do |i|
-        index = i % self.capacity
-        contained &&= @markers[index]
-        @markers[index] = true
-      end
-
-      contained
-    end
-
-    def include?(value)
-      digest = OpenSSL::Digest.new(@digest).digest(value.to_s)
-      digest.unpack("J*").all? { |i| @markers[index = i % self.capacity] }
-    end
-  end
-
   def self.exercise(items=1_000, &block)
     bloom_filter = block.call(42)
 
@@ -50,7 +22,7 @@ n = 1_000
 Benchmark.bm do |x|
   x.report("Pure Ruby") do
     n.times do
-      BloomBench.exercise { |capacity| BloomBench::BloomFilter.new(capacity) }
+      BloomBench.exercise { |capacity| BloomRuby::BloomFilter.new(capacity) }
     end
   end
 
@@ -62,7 +34,7 @@ Benchmark.bm do |x|
 
   x.report("Rust via FFI gem") do
     n.times do
-      #TODO
+      BloomBench.exercise { |capacity| BloomFFI::BloomFilter.new(capacity) }
     end
   end
 end

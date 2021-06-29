@@ -4,8 +4,17 @@ def target_dir
     File.join(__dir__, "target", "debug")
 end
 
+def prepare_environment
+    if Gem.win_platform?
+        ENV["RUBY_DLL_PATH"] = target_dir
+    else
+        # Used by ffi gem
+        ENV["LD_LIBRARY_PATH"] = target_dir
+    end
+end
+
 RSpec::Core::RakeTask.new(:test) do |t|
-    ENV["RUBY_DLL_PATH"] = target_dir if Gem.win_platform?
+    prepare_environment
     t.rspec_opts = ["-I#{target_dir}"]
 end
 
@@ -41,17 +50,17 @@ task :compile do
 end
 
 task :console => [:compile] do
-    ENV["RUBY_DLL_PATH"] = target_dir if Gem.win_platform?
+    prepare_environment
 
-    exec("irb -I#{target_dir} -rbloom_filter")
+    exec("irb -I#{target_dir} -Ilib -rbloom_filter -rbloom_ffi -rbloom_ruby")
 end
 
 task :bench do
-    ENV["RUBY_DLL_PATH"] = target_dir if Gem.win_platform?
+    prepare_environment
 
     file_path = File.join("lib", "bloom_bench.rb")
 
-    exec("ruby -I#{target_dir} -Ilib -rbloom_filter -rbenchmark #{file_path}")
+    exec("ruby -I#{target_dir} -Ilib -rbenchmark #{file_path}")
 end
 
 task :clean do
