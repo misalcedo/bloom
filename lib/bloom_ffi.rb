@@ -1,24 +1,37 @@
 require "ffi"
 
 module BloomFFI
+  extend FFI::Library
 
-  module Library
-    extend FFI::Library
-    ffi_lib "bloom"
+  ffi_lib "bloom"
 
-    attach_function :BloomFilterDrop, [:pointer, :size_t], :pointer # returns fresh memory
-    attach_function :bloom_filter_initialize, [ :pointer ], :void             # frees memory
-    attach_function :bloom_filter_new, [ :pointer ], :void             # frees memory
-    attach_function :bloom_filter_capacity, [ :pointer ], :void             # frees memory
-    attach_function :bloom_filter_initialize, [ :pointer ], :void             # frees memory
-    attach_function :bloom_filter_initialize, [ :pointer ], :void             # frees memory
-
+  class BloomFilterPointer < ::FFI::AutoPointer
+    def self.release(ptr)
+      BloomFFI.bloom_filter_free(ptr)
+    end
   end
 
-  class AutoPointer < ::FFI::AutoPointer
-    # This method will be called by FFI::AutoPointer::DefaultReleaser.
-    def self.release(ptr)
-      Library.bloom_filter_free(ptr)
+  attach_function :bloom_new, [:size_t], BloomFilterPointer
+  attach_function :bloom_drop, [BloomFilterPointer], :void
+  attach_function :bloom_capacity, [ BloomFilterPointer ], :size_t
+  attach_function :bloom_insert, [ BloomFilterPointer, :string ], :bool
+  attach_function :bloom_contains, [ BloomFilterPointer, :string ], :bool
+
+  class BloomFilter
+    def initialize(capacity)
+      @ptr = BloomFFI.bloom_new(capacity)
+    end
+
+    def capacity
+      BloomFFI.bloom_capacity(@ptr)
+    end
+
+    def add(value)
+      BloomFFI.bloom_insert(@ptr, value)
+    end
+
+    def include?(value)
+      BloomFFI.bloom_contains(@ptr, value)
     end
   end
 end

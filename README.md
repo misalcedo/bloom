@@ -22,6 +22,18 @@ irb(main):001:0> Bloom::BloomFilter::new(42)
 => #<Bloom::BloomFilter:0x00007fc7a70b0970>
 ```
 
+# Benchmark
+The benchmarks can be run via `rake bench`.
+
+```
+$ rake bench
+                  user     system      total        real
+Pure Ruby         4.204919   0.018345   4.223264 (  4.241795)
+Rust via C-API    2.595431   0.013169   2.608600 (  2.620140)
+Rust via FFI gem  2.935205   0.009907   2.945112 (  2.956811)
+
+```
+
 # Resources
 * [Extending Ruby with C-extensions](https://ruby-doc.com/docs/ProgrammingRuby/html/ext_ruby.html)
 * [bindgen User Guide](https://rust-lang.github.io/rust-bindgen/introduction.html)

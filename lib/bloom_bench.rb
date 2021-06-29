@@ -18,7 +18,7 @@ module BloomBench
   end
 end
 
-n = 1
+n = 1_000
 Benchmark.bm do |x|
   x.report("Pure Ruby") do
     n.times do

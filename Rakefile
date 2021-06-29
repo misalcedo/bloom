@@ -52,7 +52,7 @@ end
 task :console => [:compile] do
     prepare_environment
 
-    exec("irb -I#{target_dir} -rbloom_filter")
+    exec("irb -I#{target_dir} -Ilib -rbloom_filter -rbloom_ffi -rbloom_ruby")
 end
 
 task :bench do
