@@ -52,7 +52,7 @@ We can sign gem output and install with high security to secure our supply chain
 The benchmarks can be run via `rake bench`.
 
 ```
-codespace ➜ /workspaces/bloom (concurrent ✗) $ rake bench
+$ rake bench
                                               user     system      total        real
 Pure Ruby                                 0.397304   0.000000   0.397304 (  0.397313)
 Rust via C-API                            0.068730   0.000000   0.068730 (  0.068731)
