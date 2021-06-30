@@ -3,7 +3,7 @@ require "bloom_filter"
 require "bloom_ffi"
 
 module BloomBench
-  def self.exercise(items=1_000, &block)
+  def self.exercise(items, &block)
     bloom_filter = block.call(42)
 
     raise "Invalid capacity." unless bloom_filter.capacity >= 42
@@ -19,22 +19,29 @@ module BloomBench
 end
 
 n = 1_000
+i = 1_000
 Benchmark.bm do |x|
   x.report("Pure Ruby") do
     n.times do
-      BloomBench.exercise { |capacity| BloomRuby::BloomFilter.new(capacity) }
+      BloomBench.exercise(i) { |capacity| BloomRuby::BloomFilter.new(capacity) }
     end
   end
 
   x.report("Rust via C-API") do
     n.times do
-      BloomBench.exercise { |capacity| Bloom::BloomFilter.new(capacity) }
+      BloomBench.exercise(i) { |capacity| Bloom::BloomFilter.new(capacity) }
     end
   end
 
   x.report("Rust via FFI gem") do
     n.times do
-      BloomBench.exercise { |capacity| BloomFFI::BloomFilter.new(capacity) }
+      BloomBench.exercise(i) { |capacity| BloomFFI::BloomFilter.new(capacity) }
+    end
+  end
+
+  x.report("Atomic Pure Ruby") do
+    n.times do
+      BloomBench.exercise(i) { |capacity| BloomRuby::AtomicBloomFilter.new(capacity) }
     end
   end
 end
