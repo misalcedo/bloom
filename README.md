@@ -26,12 +26,17 @@ irb(main):001:0> Bloom::BloomFilter::new(42)
 The benchmarks can be run via `rake bench`.
 
 ```
-$ rake bench
-                  user     system      total        real
-Pure Ruby         4.204919   0.018345   4.223264 (  4.241795)
-Rust via C-API    2.595431   0.013169   2.608600 (  2.620140)
-Rust via FFI gem  2.935205   0.009907   2.945112 (  2.956811)
-
+codespace ➜ /workspaces/bloom (concurrent ✗) $ rake bench
+                                              user     system      total        real
+Pure Ruby                                 0.397027   0.000005   0.397032 (  0.397031)
+Rust via C-API                            0.324624   0.008002   0.332626 (  0.332649)
+Rust via FFI gem                          0.360630   0.000000   0.360630 (  0.360632)
+Atomic Pure Ruby                          0.402783   0.000000   0.402783 (  0.402793)
+Atomic Rust via C-API                     0.351951   0.000000   0.351951 (  0.351962)
+Atomic Rust via FFI gem                   0.378851   0.000000   0.378851 (  0.378852)
+Atomic Pure Ruby with Concurreny          4.257117   0.056108   4.313225 (  4.300757)
+Atomic Rust via C-API with Concurreny     3.846755   0.072121   3.918876 (  3.906959)
+Atomic Rust via FFI gem with Concurreny   5.116558   0.088260   5.204818 (  5.190831)
 ```
 
 # Resources
