@@ -27,9 +27,17 @@ To use this library as a gem:
 
 1. Run `bundle install`.
 1. Run `gem build`.
-1. Change directory to `example`.
+1. Change directory to `examples`.
 1. Run `bundle install`.
 1. Run `bundle exec irb` or `bundle exec ruby`.
+
+# Install
+To install this gem locally:
+
+1. Run `gem build bloom`.
+1. Run `gem install bloom`.
+1. Run `irb` or `ruby`.
+
 
 # Benchmark
 The benchmarks can be run via `rake bench`.
