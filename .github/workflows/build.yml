@@ -35,7 +35,9 @@ jobs:
         run: bundle install
       - name: Install OpenSSL
         if: matrix.build == 'windows'
-        run: choco install openssl
+        run: |
+          choco install openssl
+          echo "OPENSSL_DIR=C:\Program Files\OpenSSL-Win64\" >> $GITHUB_ENV
       - name: Install Rust
         run: |
           rustup update ${{ matrix.rust }} --no-self-update
