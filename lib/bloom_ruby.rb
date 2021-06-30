@@ -1,5 +1,4 @@
 require "openssl"
-require "concurrent-ruby"
 
 module BloomRuby
   class BloomFilter
@@ -39,7 +38,8 @@ module BloomRuby
   class AtomicBloomFilter
     def initialize(capacity)
       @digest = "SHA512"
-      @markers = Concurrent::Array.new(capacity, false)
+      @semaphore = Mutex.new
+      @markers = Array.new(capacity, false)
     end
 
     def capacity
@@ -49,17 +49,21 @@ module BloomRuby
     def add(value)
       contained = true
 
-      indices_of(value).each do |i|
-        index = i % self.capacity
-        contained &&= @markers[index]
-        @markers[index] = true
+      @semaphore.synchronize do
+        indices_of(value).each do |i|
+          index = i % self.capacity
+          contained &&= @markers[index]
+          @markers[index] = true
+        end
       end
 
       contained
     end
 
     def include?(value)
-      indices_of(value).all? { |i| @markers[index = i % self.capacity] }
+      @semaphore.synchronize do
+        indices_of(value).all? { |i| @markers[index = i % self.capacity] }
+      end
     end
 
     private
