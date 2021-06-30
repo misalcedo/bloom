@@ -16,6 +16,7 @@ def prepare_environment
 end
 
 RSpec::Core::RakeTask.new(:test) do |t|
+    prepare_environment
     t.rspec_opts = ["-I#{target_dir} -Ilib"]
 end
 
