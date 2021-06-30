@@ -52,3 +52,6 @@ jobs:
         run: bundle exec rake compile
       - name: Test Extension
         run: bundle exec rake test
+        env:
+          RUBY_DLL_PATH: ${{ env.GITHUB_WORKSPACE }}/target/debug
+          LD_LIBRARY_PATH: ${{ env.GITHUB_WORKSPACE }}/target/debug
