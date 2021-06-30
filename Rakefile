@@ -1,7 +1,7 @@
 require 'rspec/core/rake_task'
 
 def target_dir
-    File.join(__dir__, "target", "debug")
+    File.join(__dir__, "target", "release")
 end
 
 def prepare_environment
@@ -10,22 +10,20 @@ def prepare_environment
     else
         # Used by ffi gem
         ENV["LD_LIBRARY_PATH"] = target_dir
-        ENV["DYLD_LIBRARY_PATH"] = target_dir
-        ENV["DYLD_FALLBACK_LIBRARY_PATH"] = target_dir
     end
 end
 
-RSpec::Core::RakeTask.new(:test) do |t|
+RSpec::Core::RakeTask.new(:spec) do |t|
     prepare_environment
     t.rspec_opts = ["-I#{target_dir} -Ilib"]
 end
 
 task :cargo_build do
-    system("cargo build", exception: true)
+    system("cargo build --release", exception: true)
 end
 
 task :cargo_test do
-    system("cargo test", exception: true)
+    system("cargo test --release", exception: true)
 end
 
 task :compile do
@@ -69,4 +67,6 @@ task :clean do
     system("cargo clean", exception: true)
 end
 
-task :default => [:cargo_build, :cargo_test, :compile, :test]
+task :test => [:cargo_test, :test]
+task :all => [:clean, :cargo_build, :cargo_test, :compile, :spec]
+task :default => [:cargo_build, :compile]

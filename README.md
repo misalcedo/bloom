@@ -22,6 +22,29 @@ irb(main):001:0> Bloom::BloomFilter::new(42)
 => #<Bloom::BloomFilter:0x00007fc7a70b0970>
 ```
 
+# Example
+To use this library as a gem:
+
+1. Run `bundle install`.
+1. Run `gem build`.
+1. Change directory to `examples`.
+1. Run `bundle install`.
+1. Run `bundle exec irb` or `bundle exec ruby`.
+
+# Install
+To install this gem locally:
+
+1. Run `gem build bloom`.
+1. Run `gem install bloom`.
+1. Run `irb` or `ruby`.
+
+# Notes
+Running `gem build bloom` produces a nested GZipped tar file. The inside the `.gem` file is a `data.tar.gz` file that contains the items in the gemspec's `files` list. This gives us 2 options for packaging gems for consumption:
+1. Build Rust library in a CI pipeline to produce the library. Then, add the C dynamic library to the gem.
+1. Add the rust source code to the gem output. Then, build Rust library on the target machine. Thus, requiring a local version of the Rust toolchain (i.e. rustup, rustc, and cargo). to produce the library.
+
+Building on the target machine is beneficial to ensure our gem can be downloaded from a central store and will work anywhere. However, for internal-only gems building in a CI pipeline would greatly reduce installation time.
+
 # Benchmark
 The benchmarks can be run via `rake bench`.
 

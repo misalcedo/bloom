@@ -1,5 +1,3 @@
-puts("LD_LIBRARY_PATH=#{ENV["LD_LIBRARY_PATH"]}")
-
 require 'bloom_filter'
 require 'bloom_ruby'
 require 'bloom_ffi'

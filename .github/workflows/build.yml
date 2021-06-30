@@ -45,10 +45,10 @@ jobs:
           rustup update ${{ matrix.rust }} --no-self-update
           rustup default ${{ matrix.rust }}
       - name: Build Cargo
-        run: cargo build
+        run: bundle exec rake cargo_build
       - name: Test Cargo
-        run: cargo test
+        run: bundle exec rake cargo_test
       - name: Build Extension
         run: bundle exec rake compile
       - name: Test Extension
-        run: bundle exec rake test
+        run: bundle exec rake spec
