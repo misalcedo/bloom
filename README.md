@@ -54,15 +54,15 @@ The benchmarks can be run via `rake bench`.
 ```
 codespace ➜ /workspaces/bloom (concurrent ✗) $ rake bench
                                               user     system      total        real
-Pure Ruby                                 0.397027   0.000005   0.397032 (  0.397031)
-Rust via C-API                            0.324624   0.008002   0.332626 (  0.332649)
-Rust via FFI gem                          0.360630   0.000000   0.360630 (  0.360632)
-Atomic Pure Ruby                          0.402783   0.000000   0.402783 (  0.402793)
-Atomic Rust via C-API                     0.351951   0.000000   0.351951 (  0.351962)
-Atomic Rust via FFI gem                   0.378851   0.000000   0.378851 (  0.378852)
-Atomic Pure Ruby with Concurreny          4.257117   0.056108   4.313225 (  4.300757)
-Atomic Rust via C-API with Concurreny     3.846755   0.072121   3.918876 (  3.906959)
-Atomic Rust via FFI gem with Concurreny   5.116558   0.088260   5.204818 (  5.190831)
+Pure Ruby                                 0.397304   0.000000   0.397304 (  0.397313)
+Rust via C-API                            0.068730   0.000000   0.068730 (  0.068731)
+Rust via FFI gem                          0.094124   0.000000   0.094124 (  0.094122)
+Atomic Pure Ruby                          0.404480   0.000000   0.404480 (  0.404519)
+Atomic Rust via C-API                     0.070936   0.000000   0.070936 (  0.070938)
+Atomic Rust via FFI gem                   0.097816   0.000000   0.097816 (  0.097819)
+Atomic Pure Ruby with Concurreny          3.867422   0.027961   3.895383 (  3.888737)
+Atomic Rust via C-API with Concurreny     3.459401   0.028163   3.487564 (  3.477034)
+Atomic Rust via FFI gem with Concurreny   3.366540   0.032084   3.398624 (  3.388107)
 ```
 
 # Resources
