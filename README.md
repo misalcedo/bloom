@@ -49,7 +49,7 @@ Building on the target machine is beneficial to ensure our gem can be downloaded
 We can sign gem output and install with high security to secure our supply chain. See [RubyGems - Security](https://guides.rubygems.org/security/) for more details.
 
 # Benchmark
-The benchmarks can be run via `rake bench`.
+The benchmarks can be run via `rake bench`. The following run was captured using a GitHub workspace:
 
 ```
 $ rake bench
