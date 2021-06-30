@@ -1,0 +1,21 @@
+on:
+  push:
+    branches: [ master ]
+    paths: [ 'Cargo.toml', 'bloom.gemspec' ]
+  workflow_dispatch: {}
+
+name: Release
+
+jobs:
+  publish:
+    name: Pulish to crates.io
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.0.1
+      - name: Publish
+        run: |
+          gem build
