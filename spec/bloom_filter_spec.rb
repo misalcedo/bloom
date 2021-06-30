@@ -1,6 +1,5 @@
 require 'bloom_filter'
 require 'bloom_ruby'
-require 'bloom_ffi'
 
 RSpec.shared_examples "is a bloom filter" do
   it "#new" do
@@ -65,13 +64,5 @@ RSpec.describe BloomRuby::BloomFilter do
 end
 
 RSpec.describe BloomRuby::AtomicBloomFilter do
-  include_examples "is a bloom filter"
-end
-
-RSpec.describe BloomFFI::BloomFilter do
-  include_examples "is a bloom filter"
-end
-
-RSpec.describe BloomFFI::AtomicBloomFilter do
   include_examples "is a bloom filter"
 end
