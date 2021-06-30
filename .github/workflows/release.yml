@@ -22,7 +22,7 @@ jobs:
       - name: Build gem
         run: |
           gem build
-      - name: Build and push Docker image
+      - name: Publish gem
         uses: actions/upload-artifact@v2.2.4
         with:
             # Artifact name
