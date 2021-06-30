@@ -44,4 +44,16 @@ Benchmark.bm do |x|
       BloomBench.exercise(i) { |capacity| BloomRuby::AtomicBloomFilter.new(capacity) }
     end
   end
+
+  x.report("Atomic Rust via C-API") do
+    n.times do
+      BloomBench.exercise(i) { |capacity| Bloom::AtomicBloomFilter.new(capacity) }
+    end
+  end
+
+  x.report("Atomic Rust via FFI gem") do
+    n.times do
+      BloomBench.exercise(i) { |capacity| BloomFFI::AtomicBloomFilter.new(capacity) }
+    end
+  end
 end

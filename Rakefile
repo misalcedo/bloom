@@ -15,7 +15,7 @@ end
 
 RSpec::Core::RakeTask.new(:test) do |t|
     prepare_environment
-    t.rspec_opts = ["-I#{target_dir}"]
+    t.rspec_opts = ["-I#{target_dir} -Ilib"]
 end
 
 task :cargo_build do

@@ -1,6 +1,8 @@
 require 'bloom_filter'
+require 'bloom_ruby'
+require 'bloom_ffi'
 
-RSpec.describe Bloom::BloomFilter do
+RSpec.shared_examples "is a bloom filter" do
   it "#new" do
     expect { described_class.new(42) }.to_not raise_error
   end
@@ -48,4 +50,28 @@ RSpec.describe Bloom::BloomFilter do
       end
     end
   end
+end
+
+RSpec.describe Bloom::BloomFilter do
+  include_examples "is a bloom filter"
+end
+
+RSpec.describe Bloom::AtomicBloomFilter do
+  include_examples "is a bloom filter"
+end
+
+RSpec.describe BloomRuby::BloomFilter do
+  include_examples "is a bloom filter"
+end
+
+RSpec.describe BloomRuby::AtomicBloomFilter do
+  include_examples "is a bloom filter"
+end
+
+RSpec.describe BloomFFI::BloomFilter do
+  include_examples "is a bloom filter"
+end
+
+RSpec.describe BloomFFI::AtomicBloomFilter do
+  include_examples "is a bloom filter"
 end

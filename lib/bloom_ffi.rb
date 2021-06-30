@@ -7,7 +7,13 @@ module BloomFFI
 
   class BloomFilterPointer < ::FFI::AutoPointer
     def self.release(ptr)
-      BloomFFI.bloom_filter_free(ptr)
+      BloomFFI.bloom_drop(ptr)
+    end
+  end
+
+  class AtomicBloomFilterPointer < ::FFI::AutoPointer
+    def self.release(ptr)
+      BloomFFI.atomic_bloom_drop(ptr)
     end
   end
 
@@ -16,6 +22,12 @@ module BloomFFI
   attach_function :bloom_capacity, [ BloomFilterPointer ], :size_t
   attach_function :bloom_insert, [ BloomFilterPointer, :string ], :bool
   attach_function :bloom_contains, [ BloomFilterPointer, :string ], :bool
+
+  attach_function :atomic_bloom_new, [:size_t], AtomicBloomFilterPointer
+  attach_function :atomic_bloom_drop, [AtomicBloomFilterPointer], :void
+  attach_function :atomic_bloom_capacity, [ AtomicBloomFilterPointer ], :size_t
+  attach_function :atomic_bloom_insert, [ AtomicBloomFilterPointer, :string ], :bool
+  attach_function :atomic_bloom_contains, [ AtomicBloomFilterPointer, :string ], :bool
 
   class BloomFilter
     def initialize(capacity)
@@ -32,6 +44,24 @@ module BloomFFI
 
     def include?(value)
       BloomFFI.bloom_contains(@ptr, value)
+    end
+  end
+
+  class AtomicBloomFilter
+    def initialize(capacity)
+      @ptr = BloomFFI.atomic_bloom_new(capacity)
+    end
+
+    def capacity
+      BloomFFI.atomic_bloom_capacity(@ptr)
+    end
+
+    def add(value)
+      BloomFFI.atomic_bloom_insert(@ptr, value)
+    end
+
+    def include?(value)
+      BloomFFI.atomic_bloom_contains(@ptr, value)
     end
   end
 end

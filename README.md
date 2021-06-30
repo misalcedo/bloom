@@ -27,11 +27,13 @@ The benchmarks can be run via `rake bench`.
 
 ```
 codespace ➜ /workspaces/bloom (concurrent ✗) $ rake bench
-                  user     system      total        real
-Pure Ruby         4.285034   0.000030   4.285064 (  4.285247)
-Rust via C-API    3.345585   0.000000   3.345585 (  3.345690)
-Rust via FFI gem  3.654484   0.000000   3.654484 (  3.654601)
-Atomic Pure Ruby  4.581212   0.000000   4.581212 (  4.581310)
+                         user     system      total        real
+Pure Ruby                4.125050   0.000073   4.125123 (  4.125702)
+Rust via C-API           3.338941   0.000000   3.338941 (  3.338999)
+Rust via FFI gem         3.666967   0.000000   3.666967 (  3.667031)
+Atomic Pure Ruby         4.297110   0.000000   4.297110 (  4.297199)
+Atomic Rust via C-API    3.536516   0.000000   3.536516 (  3.536612)
+Atomic Rust via FFI gem  3.823249   0.003993   3.827242 (  3.827277)
 ```
 
 # Resources
