@@ -8,14 +8,26 @@ name: Release
 
 jobs:
   publish:
-    name: Pulish to crates.io
+    name: Pulish gem
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v2
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.0.1
-      - name: Publish
+      - name: Build gem
         run: |
           gem build
+      - name: Build and push Docker image
+        uses: actions/upload-artifact@v2.2.4
+        with:
+            # Artifact name
+            name: bloom.gem
+            # A file, directory or wildcard pattern that describes what to upload
+            path: ./bloom-*.gem
+            if-no-files-found: error
+            retention-days: 30
