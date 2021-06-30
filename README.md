@@ -22,6 +22,15 @@ irb(main):001:0> Bloom::BloomFilter::new(42)
 => #<Bloom::BloomFilter:0x00007fc7a70b0970>
 ```
 
+# Example
+To use this library as a gem:
+
+1. Run `bundle install`.
+1. Run `gem build`.
+1. Change directory to `example`.
+1. Run `bundle install`.
+1. Run `bundle exec irb` or `bundle exec ruby`.
+
 # Benchmark
 The benchmarks can be run via `rake bench`.
 
