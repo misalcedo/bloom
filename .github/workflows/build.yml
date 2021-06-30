@@ -38,6 +38,8 @@ jobs:
         run: |
           choco install openssl
           echo "OPENSSL_DIR=C:\Program Files\OpenSSL-Win64\" >> $GITHUB_ENV
+          echo "OPENSSL_CONF=C:\Program Files\OpenSSL-Win64\bin\openssl.cfg" >> $GITHUB_ENV
+          echo "C:\Program Files\OpenSSL-Win64\bin" >> $GITHUB_PATH
       - name: Install Rust
         run: |
           rustup update ${{ matrix.rust }} --no-self-update
