@@ -3,7 +3,9 @@ require "ffi"
 module BloomFFI
   extend FFI::Library
 
-  ffi_lib "bloom"
+  LIBRARY_NAME = "bloom"
+
+  ffi_lib [LIBRARY_NAME] + $LOAD_PATH.map {|p| File.join(p, FFI::map_library_name(LIBRARY_NAME)) }
 
   class BloomFilterPointer < ::FFI::AutoPointer
     def self.release(ptr)
