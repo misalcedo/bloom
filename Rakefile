@@ -10,6 +10,8 @@ def prepare_environment
     else
         # Used by ffi gem
         ENV["LD_LIBRARY_PATH"] = target_dir
+        ENV["DYLD_LIBRARY_PATH"] = target_dir
+        ENV["DYLD_FALLBACK_LIBRARY_PATH"] = target_dir
     end
 end
 
