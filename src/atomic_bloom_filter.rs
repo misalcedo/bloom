@@ -1,23 +1,9 @@
+use crate::hash::{indices, sha512};
 use bitvec::prelude::*;
-use openssl::sha;
 use std::sync::{Arc, Mutex};
 
 pub struct AtomicBloomFilter {
     counts: Arc<Mutex<BitVec>>,
-}
-
-fn hash(value: &[u8]) -> [u8; 64] {
-    let mut hasher = sha::Sha512::new();
-
-    hasher.update(value);
-
-    hasher.finish()
-}
-
-fn indices(hash: &[u8]) -> &[usize] {
-    let (_prefix, indices, _suffix) = unsafe { hash.align_to::<usize>() };
-
-    indices
 }
 
 impl AtomicBloomFilter {
@@ -49,7 +35,7 @@ impl AtomicBloomFilter {
 
         let mut contained = true;
         let n = guard.len();
-        let output = hash(value);
+        let output = sha512(value);
         let indices = indices(&output);
 
         for i in indices {
@@ -73,7 +59,7 @@ impl AtomicBloomFilter {
         };
         let mut contained = true;
         let n = guard.len();
-        let output = hash(value);
+        let output = sha512(value);
         let indices = indices(&output);
 
         for i in indices {

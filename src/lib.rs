@@ -1,6 +1,7 @@
 mod atomic_bloom_filter;
 mod bloom_filter;
 mod errors;
+mod hash;
 
 pub use atomic_bloom_filter::AtomicBloomFilter;
 pub use bloom_filter::BloomFilter;
