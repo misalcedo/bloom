@@ -84,7 +84,7 @@ pub unsafe extern "C" fn bloom_remove(
     value: *const c_char,
 ) -> BloomResult<bool, errors::BloomFilterError> {
     if value.is_null() {
-        return BloomResult::Ok(false);
+        return Ok(false).into();
     }
 
     let value = CStr::from_ptr(value);
@@ -155,7 +155,7 @@ pub unsafe extern "C" fn atomic_bloom_remove(
     value: *const c_char,
 ) -> BloomResult<bool, errors::BloomFilterError> {
     if value.is_null() {
-        return BloomResult::Ok(false);
+        return Ok(false).into();
     }
 
     let value = CStr::from_ptr(value);
