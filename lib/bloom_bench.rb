@@ -84,19 +84,19 @@ Benchmark.bmbm do |x|
     end
   end
 
-  x.report("Atomic Pure Ruby with Concurreny") do
+  x.report("Atomic Pure Ruby with Concurrency") do
     n.times do
       BloomBench.concurrent_exercise(i, n) { |capacity| BloomRuby::AtomicBloomFilter.new(capacity) }
     end
   end
 
-  x.report("Atomic Rust via C-API with Concurreny") do
+  x.report("Atomic Rust via C-API with Concurrency") do
     n.times do
       BloomBench.concurrent_exercise(i, n) { |capacity| Bloom::AtomicBloomFilter.new(capacity) }
     end
   end
 
-  x.report("Atomic Rust via FFI gem with Concurreny") do
+  x.report("Atomic Rust via FFI gem with Concurrency") do
     n.times do
       BloomBench.concurrent_exercise(i, n) { |capacity| BloomFFI::AtomicBloomFilter.new(capacity) }
     end
