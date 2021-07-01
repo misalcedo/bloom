@@ -1,3 +1,4 @@
+use crate::errors::{BloomFilterError, ErrorKind};
 use crate::hash::{indices, sha512};
 use bitvec::prelude::*;
 use std::sync::{Arc, Mutex};
@@ -70,11 +71,24 @@ impl AtomicBloomFilter {
 
         contained
     }
+
+    /// Removes a value from the filter. Returns whether the value was probably
+    /// present in the filter.
+    ///
+    /// The value may be any borrowed form of the filter's value type, but
+    /// [`Eq`] on the borrowed form *must* match those for the value type.
+    ///
+    /// # Note
+    /// Not all bloom filters support removal of elements.
+    pub fn remove(&self, _value: &[u8]) -> Result<bool, BloomFilterError> {
+        Err(ErrorKind::NotSupported.into())
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::AtomicBloomFilter;
+    use crate::errors::ErrorKind;
 
     #[test]
     fn when_empty() {
@@ -99,5 +113,27 @@ mod tests {
         filter.insert("42".as_bytes());
 
         assert!(!filter.contains("1".as_bytes()));
+    }
+
+    #[test]
+    fn remove_when_not_member() {
+        let filter = AtomicBloomFilter::new(100);
+
+        let result = filter.remove("1".as_bytes());
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err().kind, ErrorKind::NotSupported);
+    }
+
+    #[test]
+    fn remove_when_is_member() {
+        let mut filter = AtomicBloomFilter::new(100);
+
+        filter.insert("42".as_bytes());
+
+        let result = filter.remove("1".as_bytes());
+
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err().kind, ErrorKind::NotSupported);
     }
 }
