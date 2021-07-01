@@ -60,9 +60,9 @@ Rust via FFI gem                          0.094124   0.000000   0.094124 (  0.09
 Atomic Pure Ruby                          0.404480   0.000000   0.404480 (  0.404519)
 Atomic Rust via C-API                     0.070936   0.000000   0.070936 (  0.070938)
 Atomic Rust via FFI gem                   0.097816   0.000000   0.097816 (  0.097819)
-Atomic Pure Ruby with Concurreny          3.867422   0.027961   3.895383 (  3.888737)
-Atomic Rust via C-API with Concurreny     3.459401   0.028163   3.487564 (  3.477034)
-Atomic Rust via FFI gem with Concurreny   3.366540   0.032084   3.398624 (  3.388107)
+Atomic Pure Ruby with Concurrency         3.867422   0.027961   3.895383 (  3.888737)
+Atomic Rust via C-API with Concurrency    3.459401   0.028163   3.487564 (  3.477034)
+Atomic Rust via FFI gem with Concurrency  3.366540   0.032084   3.398624 (  3.388107)
 ```
 
 # Resources
