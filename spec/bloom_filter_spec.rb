@@ -55,9 +55,21 @@ RSpec.shared_examples "is a bloom filter" do |namespace|
         expect(subject).to include("foo")
       end
 
-      it "when potentially in the data structure" do
+      it "when potentially in the data structure contains none" do
         subject.add("bar")
         expect(subject).to_not include("foo")
+      end
+    end
+
+    describe "#include_all?" do
+      it "when potentially in the data structure" do
+        subject.add("bar")
+        expect(subject.include_all?(Array.new(100, "foo"))).to be false
+      end
+
+      it "when in the data structure" do
+        subject.add("foo")
+        expect(subject.include_all?(Array.new(100, "foo"))).to be true
       end
     end
   end

@@ -29,6 +29,11 @@ module BloomRuby
       indices_of(value).all? { |i| @markers[index = i % self.capacity] }
     end
 
+
+    def include_all?(values)
+      values.all? { |value| include?(value) }
+    end
+
     def delete(value)
       raise(BloomFilterError, "Bloom filter does not support the #delete operation.")
     end
@@ -70,6 +75,10 @@ module BloomRuby
       @semaphore.synchronize do
         indices_of(value).all? { |i| @markers[index = i % self.capacity] }
       end
+    end
+
+    def include_all?(values)
+      values.all? { |value| include?(value) }
     end
 
     def delete(value)
