@@ -49,7 +49,7 @@ task :compile do
     end
 end
 
-task :console => [:compile] do
+task :console do
     prepare_environment
 
     exec("irb -I#{target_dir} -Ilib -rbloom_filter -rbloom_ffi -rbloom_ruby")
