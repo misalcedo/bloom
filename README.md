@@ -45,6 +45,8 @@ Running `gem build bloom` produces a nested GZipped tar file (see `gem help buil
 
 Building on the target machine is beneficial to ensure our gem can be downloaded from a central store and will work anywhere. However, for internal-only gems building in a CI pipeline would greatly reduce installation time.
 
+Also, the result type returned in the remove methods has no Drop trait logic. Therefore, we can safeluy return it by value. Otherwise, we could treat the result as a managed struct and call a drop method on it. However, this would only be supported autoamtically in the FFI case. The C library would need to introduce calls to free the result wherever necessary.
+
 # Security
 We can sign gem output and install with high security to secure our supply chain. See [RubyGems - Security](https://guides.rubygems.org/security/) for more details.
 
