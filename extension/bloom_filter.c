@@ -71,13 +71,13 @@ static VALUE bloom_filter_remove(VALUE self, VALUE value)
 
     Data_Get_Struct(self, BloomFilter, ptr);
 
-    BloomResult_bool__BloomFilterError result = bloom_remove(ptr, RSTRING_PTR(value));
+    BloomResult_bool result = bloom_remove(ptr, RSTRING_PTR(value));
 
-    if (result.tag == Ok_bool__BloomFilterError)
+    if (result.tag == Ok_bool)
     {
         return result.ok ? Qtrue : Qfalse;
     }
-    else if (result.tag == Err_bool__BloomFilterError && result.err.kind == NotSupported)
+    else if (result.tag == Err_bool && result.err.kind == NotSupported)
     {
         rb_raise(not_supported, "Bloom filter does not support the #delete operation.");
     }
@@ -152,13 +152,13 @@ static VALUE atomic_bloom_filter_remove(VALUE self, VALUE value)
 
     Data_Get_Struct(self, AtomicBloomFilter, ptr);
 
-    BloomResult_bool__BloomFilterError result = atomic_bloom_remove(ptr, RSTRING_PTR(value));
+    BloomResult_bool result = atomic_bloom_remove(ptr, RSTRING_PTR(value));
     
-    if (result.tag == Ok_bool__BloomFilterError)
+    if (result.tag == Ok_bool)
     {
         return result.ok ? Qtrue : Qfalse;
     }
-    else if (result.tag == Err_bool__BloomFilterError && result.err.kind == NotSupported)
+    else if (result.tag == Err_bool && result.err.kind == NotSupported)
     {
         rb_raise(not_supported, "Bloom filter does not support the #delete operation.");
     }
