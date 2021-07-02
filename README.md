@@ -55,16 +55,16 @@ The benchmarks can be run via `rake bench`. The following run was captured using
 
 ```
 $ rake bench
-                                              user     system      total        real
-Pure Ruby                                 0.397304   0.000000   0.397304 (  0.397313)
-Rust via C-API                            0.068730   0.000000   0.068730 (  0.068731)
-Rust via FFI gem                          0.094124   0.000000   0.094124 (  0.094122)
-Atomic Pure Ruby                          0.404480   0.000000   0.404480 (  0.404519)
-Atomic Rust via C-API                     0.070936   0.000000   0.070936 (  0.070938)
-Atomic Rust via FFI gem                   0.097816   0.000000   0.097816 (  0.097819)
-Atomic Pure Ruby with Concurrency         3.867422   0.027961   3.895383 (  3.888737)
-Atomic Rust via C-API with Concurrency    3.459401   0.028163   3.487564 (  3.477034)
-Atomic Rust via FFI gem with Concurrency  3.366540   0.032084   3.398624 (  3.388107)
+                                               user     system      total        real
+Pure Ruby                                  0.390053   0.000000   0.390053 (  0.390063)
+Rust via C-API                             0.067710   0.000000   0.067710 (  0.067710)
+Rust via FFI gem                           0.093329   0.000000   0.093329 (  0.093329)
+Atomic Pure Ruby                           0.400783   0.000000   0.400783 (  0.400786)
+Atomic Rust via C-API                      0.071238   0.000000   0.071238 (  0.071241)
+Atomic Rust via FFI gem                    0.100829   0.000000   0.100829 (  0.100828)
+Atomic Pure Ruby with Concurrency          4.362044   1.713511   8.535082 (  4.651307)
+Atomic Rust via C-API with Concurrency     1.912113   0.000000   1.912113 (  1.840493)
+Atomic Rust via FFI gem with Concurrency   2.145017   0.000000   2.145017 (  2.076937)
 ```
 
 # Resources
