@@ -31,8 +31,8 @@ pub struct BloomFilterError {
 
 #[repr(C)]
 pub enum ErrorKind {
-    /// Returned when the operation is not supported on the bloom filter implementation.
     NotSupported,
+    AsyncRuntime,
 }
 
 impl From<errors::BloomFilterError> for BloomFilterError {
@@ -47,6 +47,7 @@ impl From<errors::ErrorKind> for ErrorKind {
     fn from(kind: errors::ErrorKind) -> Self {
         match kind {
             errors::ErrorKind::NotSupported => ErrorKind::NotSupported,
+            errors::ErrorKind::AsyncRuntime => ErrorKind::AsyncRuntime,
         }
     }
 }
