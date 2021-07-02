@@ -7,6 +7,7 @@ pub use atomic_bloom_filter::AtomicBloomFilter;
 pub use bloom_filter::BloomFilter;
 use libc::{c_char, size_t};
 use std::ffi::CStr;
+use std::slice;
 
 /// Type used for returning and propagating errors.
 #[repr(C)]
@@ -107,6 +108,35 @@ pub unsafe extern "C" fn bloom_contains(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn bloom_contains_all(
+    bloom_filter: Option<&BloomFilter>,
+    values: *const *const c_char,
+    value_count: size_t,
+) -> BloomResult<bool> {
+    if values.is_null() {
+        return BloomResult::Ok(false);
+    }
+
+    let values: &[*const c_char] = slice::from_raw_parts(values, value_count as usize);
+
+    match bloom_filter {
+        Some(bloom_filter) => {
+            let bytes: Vec<&[u8]> = values
+                .into_iter()
+                .map(|&v| CStr::from_ptr(v))
+                .map(CStr::to_bytes)
+                .collect();
+
+            match bloom_filter.contains_multiple(&bytes) {
+                Ok(results) => BloomResult::Ok(results.iter().all(|&value| value)),
+                Err(error) => BloomResult::Err(error.into()),
+            }
+        }
+        _ => BloomResult::Ok(false),
+    }
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn bloom_remove(
     bloom_filter: Option<&mut BloomFilter>,
     value: *const c_char,
@@ -174,6 +204,35 @@ pub unsafe extern "C" fn atomic_bloom_contains(
     match bloom_filter {
         Some(bloom_filter) => bloom_filter.contains(value.to_bytes()),
         _ => false,
+    }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn atomic_bloom_contains_all(
+    bloom_filter: Option<&AtomicBloomFilter>,
+    values: *const *const c_char,
+    value_count: size_t,
+) -> BloomResult<bool> {
+    if values.is_null() {
+        return BloomResult::Ok(false);
+    }
+
+    let values: &[*const c_char] = slice::from_raw_parts(values, value_count as usize);
+
+    match bloom_filter {
+        Some(bloom_filter) => {
+            let bytes: Vec<&[u8]> = values
+                .into_iter()
+                .map(|&v| CStr::from_ptr(v))
+                .map(CStr::to_bytes)
+                .collect();
+
+            match bloom_filter.contains_multiple(&bytes) {
+                Ok(results) => BloomResult::Ok(results.iter().all(|&value| value)),
+                Err(error) => BloomResult::Err(error.into()),
+            }
+        }
+        _ => BloomResult::Ok(false),
     }
 }
 
