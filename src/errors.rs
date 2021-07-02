@@ -3,7 +3,6 @@ use std::fmt::{self, Display, Formatter};
 
 /// An error that occurred while interacting with a Bloom Fitler.
 #[derive(Debug)]
-#[repr(C)]
 pub struct BloomFilterError {
     pub kind: ErrorKind,
 }
@@ -25,7 +24,6 @@ impl Error for BloomFilterError {}
 
 /// The kind of error that occurred in interacting with a Bloom Filter.
 #[derive(Debug, Ord, PartialOrd, Eq, PartialEq)]
-#[repr(C)]
 pub enum ErrorKind {
     /// Returned when the operation is not supported on the bloom filter implementation.
     NotSupported,
