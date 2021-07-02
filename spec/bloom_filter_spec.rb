@@ -2,7 +2,7 @@ require 'bloom_filter'
 require 'bloom_ruby'
 require 'bloom_ffi'
 
-RSpec.shared_examples "is a bloom filter" do
+RSpec.shared_examples "is a bloom filter" do |namespace|
   it "#new" do
     expect { described_class.new(42) }.to_not raise_error
   end
@@ -29,6 +29,17 @@ RSpec.shared_examples "is a bloom filter" do
         expect(subject).to include("foo")
       end
     end
+
+    describe "#delete" do
+      it "when not in the data structure" do
+        expect { subject.delete("foo") }.to raise_error(namespace::BloomFilterError)
+      end
+
+      it "when in the data structure" do
+        subject.add("foo")
+        expect { subject.delete("foo") }.to raise_error(namespace::BloomFilterError)
+      end
+    end
   end
 
   describe "with capacity of 100" do
@@ -53,25 +64,25 @@ RSpec.shared_examples "is a bloom filter" do
 end
 
 RSpec.describe Bloom::BloomFilter do
-  include_examples "is a bloom filter"
+  include_examples "is a bloom filter", Bloom
 end
 
 RSpec.describe Bloom::AtomicBloomFilter do
-  include_examples "is a bloom filter"
+  include_examples "is a bloom filter", Bloom
 end
 
 RSpec.describe BloomRuby::BloomFilter do
-  include_examples "is a bloom filter"
+  include_examples "is a bloom filter", BloomRuby
 end
 
 RSpec.describe BloomRuby::AtomicBloomFilter do
-  include_examples "is a bloom filter"
+  include_examples "is a bloom filter", BloomRuby
 end
 
 RSpec.describe BloomFFI::BloomFilter do
-  include_examples "is a bloom filter"
+  include_examples "is a bloom filter", BloomFFI
 end
 
 RSpec.describe BloomFFI::AtomicBloomFilter do
-  include_examples "is a bloom filter"
+  include_examples "is a bloom filter", BloomFFI
 end
