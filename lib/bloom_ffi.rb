@@ -21,7 +21,7 @@ module BloomFFI
     end
   end
 
-  ErrorKind = enum :NotSupported
+  ErrorKind = enum :NotSupported, :AsyncRuntime
   Tag = enum :Ok, :Err
 
   class Error < FFI::Struct
@@ -44,6 +44,22 @@ module BloomFFI
   class BloomResult < FFI::Struct
     layout :tag, Tag,
             :result, Result
+
+    def ok?
+      self[:tag] == :Ok
+    end
+
+    def error?
+      self[:tag] == :Err
+    end
+
+    def value
+      self[:result][:ok][:ok] if ok?
+    end
+
+    def error_kind
+      self[:result][:err][:err][:kind] if error?
+    end
   end
 
   attach_function :bloom_new, [:size_t], BloomFilterPointer
@@ -51,6 +67,7 @@ module BloomFFI
   attach_function :bloom_capacity, [ BloomFilterPointer ], :size_t
   attach_function :bloom_insert, [ BloomFilterPointer, :string ], :bool
   attach_function :bloom_contains, [ BloomFilterPointer, :string ], :bool
+  attach_function :bloom_contains_all, [ BloomFilterPointer, :pointer, :size_t ], BloomResult.by_value
   attach_function :bloom_remove, [ BloomFilterPointer, :string ], BloomResult.by_value
 
   attach_function :atomic_bloom_new, [:size_t], AtomicBloomFilterPointer
@@ -58,7 +75,8 @@ module BloomFFI
   attach_function :atomic_bloom_capacity, [ AtomicBloomFilterPointer ], :size_t
   attach_function :atomic_bloom_insert, [ AtomicBloomFilterPointer, :string ], :bool
   attach_function :atomic_bloom_contains, [ AtomicBloomFilterPointer, :string ], :bool
-  attach_function :atomic_bloom_remove, [ BloomFilterPointer, :string ], BloomResult.by_value
+  attach_function :atomic_bloom_contains_all, [ AtomicBloomFilterPointer, :pointer, :size_t ], BloomResult.by_value
+  attach_function :atomic_bloom_remove, [ AtomicBloomFilterPointer, :string ], BloomResult.by_value
 
   class BloomFilter
     def initialize(capacity)
@@ -77,12 +95,27 @@ module BloomFFI
       BloomFFI.bloom_contains(@ptr, value)
     end
 
+    def include_all?(values)
+      buffer = FFI::MemoryPointer.new(:string, values.size)
+      buffer.write_array_of_pointer(values.map {|s| FFI::MemoryPointer.from_string(s)})
+
+      result = BloomFFI.bloom_contains_all(@ptr, buffer, values.size)
+
+      if result.ok?
+        result.value
+      elsif result.error? && result.error_kind == :AsyncRuntime
+        raise(BloomFilterError, "Bloom filter was unable to test all values.")
+      else
+        raise("Invalid result type.")
+      end
+    end
+
     def delete(value)
       result = BloomFFI.bloom_remove(@ptr, value)
       
-      if result[:tag] == :Ok
-        result[:result][:ok][:ok]
-      elsif result[:tag] == :Err && result[:result][:err][:err][:kind] == :NotSupported
+      if result.ok?
+        result.value
+      elsif result.error? && result.error_kind == :NotSupported
         raise(BloomFilterError, "Bloom filter does not support the #delete operation.")
       else
         raise("Invalid result type.")
@@ -107,12 +140,27 @@ module BloomFFI
       BloomFFI.atomic_bloom_contains(@ptr, value)
     end
 
+    def include_all?(values)
+      buffer = FFI::MemoryPointer.new(:strptr, values.size)
+      buffer.write_array_of_pointer(values.map {|s| FFI::MemoryPointer.from_string(s)})
+
+      result = BloomFFI.atomic_bloom_contains_all(@ptr, buffer, values.size)
+
+      if result.ok?
+        result.value
+      elsif result.error? && result.error_kind == :AsyncRuntime
+        raise(BloomFilterError, "Bloom filter was unable to test all values.")
+      else
+        raise("Invalid result type.")
+      end
+    end
+
     def delete(value)
       result = BloomFFI.atomic_bloom_remove(@ptr, value)
       
-      if result[:tag] == :Ok
-        result[:result][:ok][:ok]
-      elsif result[:tag] == :Err && result[:result][:err][:err][:kind] == :NotSupported
+      if result.ok?
+        result.value
+      elsif result.error? && result.error_kind == :NotSupported
         raise(BloomFilterError, "Bloom filter does not support the #delete operation.")
       else
         raise("Invalid result type.")
