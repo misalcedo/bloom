@@ -1,6 +1,8 @@
 require "openssl"
 
 module BloomRuby
+  BloomFilterError = Class.new(StandardError)
+
   class BloomFilter
     def initialize(capacity)
       @digest = "SHA512"
@@ -25,6 +27,10 @@ module BloomRuby
 
     def include?(value)
       indices_of(value).all? { |i| @markers[index = i % self.capacity] }
+    end
+
+    def delete(value)
+      raise(BloomFilterError, "Bloom filter does not support the #delete operation.")
     end
 
     private
@@ -64,6 +70,10 @@ module BloomRuby
       @semaphore.synchronize do
         indices_of(value).all? { |i| @markers[index = i % self.capacity] }
       end
+    end
+
+    def delete(value)
+      raise(BloomFilterError, "Bloom filter does not support the #delete operation.")
     end
 
     private

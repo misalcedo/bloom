@@ -8,6 +8,49 @@ pub use bloom_filter::BloomFilter;
 use libc::{c_char, size_t};
 use std::ffi::CStr;
 
+/// Type used for returning and propagating errors.
+#[repr(C)]
+pub enum BloomResult<O, E> {
+    Ok(O),
+    Err(E),
+}
+
+impl<O, E> From<Result<O, E>> for BloomResult<O, E> {
+    fn from(result: Result<O, E>) -> Self {
+        match result {
+            Ok(value) => BloomResult::Ok(value),
+            Err(error) => BloomResult::Err(error),
+        }
+    }
+}
+
+#[repr(C)]
+pub struct BloomFilterError {
+    pub kind: ErrorKind,
+}
+
+#[repr(C)]
+pub enum ErrorKind {
+    /// Returned when the operation is not supported on the bloom filter implementation.
+    NotSupported,
+}
+
+impl From<errors::BloomFilterError> for BloomFilterError {
+    fn from(error: errors::BloomFilterError) -> Self {
+        BloomFilterError{
+            kind: error.kind.into()
+        }
+    }
+}
+
+impl From<errors::ErrorKind> for ErrorKind {
+    fn from(kind: errors::ErrorKind) -> Self {
+        match kind {
+            errors::ErrorKind::NotSupported => ErrorKind::NotSupported
+        }
+    }
+}
+
 #[no_mangle]
 pub unsafe extern "C" fn bloom_new(capacity: size_t) -> *mut BloomFilter {
     Box::into_raw(Box::new(BloomFilter::new(capacity)))
@@ -63,6 +106,23 @@ pub unsafe extern "C" fn bloom_contains(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn bloom_remove(
+    bloom_filter: Option<&mut BloomFilter>,
+    value: *const c_char,
+) -> BloomResult<bool, BloomFilterError> {
+    if value.is_null() {
+        return Ok(false).into();
+    }
+
+    let value = CStr::from_ptr(value);
+
+    BloomResult::from(match bloom_filter {
+        Some(bloom_filter) => bloom_filter.remove(value.to_bytes()).map_err(BloomFilterError::from),
+        _ => Ok(false),
+    })
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn atomic_bloom_new(capacity: size_t) -> *mut AtomicBloomFilter {
     Box::into_raw(Box::new(AtomicBloomFilter::new(capacity)))
 }
@@ -114,4 +174,21 @@ pub unsafe extern "C" fn atomic_bloom_contains(
         Some(bloom_filter) => bloom_filter.contains(value.to_bytes()),
         _ => false,
     }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn atomic_bloom_remove(
+    bloom_filter: Option<&mut AtomicBloomFilter>,
+    value: *const c_char,
+) -> BloomResult<bool, BloomFilterError> {
+    if value.is_null() {
+        return Ok(false).into();
+    }
+
+    let value = CStr::from_ptr(value);
+
+    BloomResult::from(match bloom_filter {
+        Some(bloom_filter) => bloom_filter.remove(value.to_bytes()).map_err(BloomFilterError::from),
+        _ => Ok(false),
+    })
 }
