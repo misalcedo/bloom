@@ -81,7 +81,7 @@ module BloomFFI
       result = BloomFFI.bloom_remove(@ptr, value)
       
       if result[:tag] == :Ok
-        result[:result][:ok]
+        result[:result][:ok][:ok]
       elsif result[:tag] == :Err && result[:result][:err][:err][:kind] == :NotSupported
         raise(BloomFilterError, "Bloom filter does not support the #delete operation.")
       else
@@ -111,7 +111,7 @@ module BloomFFI
       result = BloomFFI.atomic_bloom_remove(@ptr, value)
       
       if result[:tag] == :Ok
-        result[:result][:ok]
+        result[:result][:ok][:ok]
       elsif result[:tag] == :Err && result[:result][:err][:err][:kind] == :NotSupported
         raise(BloomFilterError, "Bloom filter does not support the #delete operation.")
       else
