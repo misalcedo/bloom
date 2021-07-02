@@ -52,13 +52,6 @@ impl From<errors::ErrorKind> for ErrorKind {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn bloom_result_drop(result: *mut BloomResult<bool, BloomFilterError>) {
-    if !result.is_null() {
-        Box::from_raw(result);
-    }
-}
-
-#[no_mangle]
 pub unsafe extern "C" fn bloom_new(capacity: size_t) -> *mut BloomFilter {
     Box::into_raw(Box::new(BloomFilter::new(capacity)))
 }
@@ -116,17 +109,17 @@ pub unsafe extern "C" fn bloom_contains(
 pub unsafe extern "C" fn bloom_remove(
     bloom_filter: Option<&mut BloomFilter>,
     value: *const c_char,
-) -> *mut BloomResult<bool, BloomFilterError> {
+) -> BloomResult<bool, BloomFilterError> {
     if value.is_null() {
-        return Box::into_raw(Box::new(Ok(false).into()));
+        return Ok(false).into();
     }
 
     let value = CStr::from_ptr(value);
 
-    Box::into_raw(Box::new(BloomResult::from(match bloom_filter {
+    BloomResult::from(match bloom_filter {
         Some(bloom_filter) => bloom_filter.remove(value.to_bytes()).map_err(BloomFilterError::from),
         _ => Ok(false),
-    })))
+    })
 }
 
 #[no_mangle]
@@ -187,15 +180,15 @@ pub unsafe extern "C" fn atomic_bloom_contains(
 pub unsafe extern "C" fn atomic_bloom_remove(
     bloom_filter: Option<&mut AtomicBloomFilter>,
     value: *const c_char,
-) -> *mut BloomResult<bool, BloomFilterError> {
+) -> BloomResult<bool, BloomFilterError> {
     if value.is_null() {
-        return Box::into_raw(Box::new(Ok(false).into()));
+        return Ok(false).into();
     }
 
     let value = CStr::from_ptr(value);
 
-    Box::into_raw(Box::new(BloomResult::from(match bloom_filter {
+    BloomResult::from(match bloom_filter {
         Some(bloom_filter) => bloom_filter.remove(value.to_bytes()).map_err(BloomFilterError::from),
         _ => Ok(false),
-    })))
+    })
 }
