@@ -1,11 +1,20 @@
 require "openssl"
+require "parallel"
 
 module BloomRuby
   BloomFilterError = Class.new(StandardError)
 
-  def self.indices_of(value, digest="SHA512")
+  DEFAULT_DIGEST = "SHA512"
+
+  def self.indices_of(value, digest=DEFAULT_DIGEST)
     digest = OpenSSL::Digest.new(digest).digest(value.to_s)
     digest.unpack("J*")
+  end
+
+  def self.indices_of_all(values, digest=DEFAULT_DIGEST)
+    Parallel.map(values) do |value|
+      self.indices_of(value, digest)
+    end
   end
 
   class BloomFilter
@@ -35,7 +44,9 @@ module BloomRuby
 
 
     def include_all?(values)
-      values.all? { |value| include?(value) }
+      BloomRuby::indices_of_all(values).all? do |indices|
+        indices.all? { |i| @markers[index = i % self.capacity] }
+      end
     end
 
     def delete(value)
@@ -74,7 +85,9 @@ module BloomRuby
     end
 
     def include_all?(values)
-      values.all? { |value| include?(value) }
+      BloomRuby::indices_of_all(values).all? do |indices|
+        indices.all? { |i| @markers[index = i % self.capacity] }
+      end
     end
 
     def delete(value)
