@@ -25,6 +25,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency "ffi", "1.15.3"
   spec.add_runtime_dependency "concurrent-ruby", "1.1.9"
+  spec.add_runtime_dependency "parallel", "1.20.1"
 
   spec.requirements << "Rust"
   spec.requirements << "libopenssl"

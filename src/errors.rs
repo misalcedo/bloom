@@ -27,6 +27,8 @@ impl Error for BloomFilterError {}
 pub enum ErrorKind {
     /// Returned when the operation is not supported on the bloom filter implementation.
     NotSupported,
+    /// Returned when there is an issue with a call to the async runtime.
+    AsyncRuntime,
 }
 
 impl Display for ErrorKind {

@@ -25,7 +25,7 @@ module BloomBench
 
     pool = Concurrent::FixedThreadPool.new(threads)
 
-    additions = 1.upto(items).map do |n|
+    1.upto(items).map do |n|
       pool.post do
         bloom_filter.add("#{n}") if n.even?
       end
@@ -33,13 +33,12 @@ module BloomBench
 
     nil until pool.completed_task_count == items
 
-    1.upto(items) do |n|
-      pool.post do
-        raise "Invalid membership check." if n.even? && !bloom_filter.include?("#{n}")
-      end
-    end
+    _, evens = 1.upto(items).partition { |i| i.odd? }
 
-    nil until pool.completed_task_count == (2 * items)
+    raise "Invalid membership check." unless bloom_filter.include_all?(evens.map { |n| "#{n}" })
+
+    nil until pool.completed_task_count == items
+
     pool.shutdown
     pool.wait_for_termination
   end

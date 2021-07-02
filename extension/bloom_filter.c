@@ -63,6 +63,37 @@ static VALUE bloom_filter_contains(VALUE self, VALUE value)
     return contains ? Qtrue : Qfalse;
 }
 
+static VALUE bloom_filter_contains_all(VALUE self, VALUE values)
+{
+    Check_Type(values, T_ARRAY);
+    size_t length = RARRAY_LEN(values);
+    const char **strings = malloc(length * sizeof(char*));
+
+    for (size_t i = 0; i < length; i++)
+    {
+        VALUE value = rb_ary_entry(values, i);
+        Check_Type(value, T_STRING);
+        strings[i] = RSTRING_PTR(value);
+    }
+
+    BloomFilter *ptr;
+
+    Data_Get_Struct(self, BloomFilter, ptr);
+
+    BloomResult_bool result = bloom_contains_all(ptr, strings, length);
+
+    if (result.tag == Ok_bool)
+    {
+        return result.ok ? Qtrue : Qfalse;
+    }
+    else if (result.tag == Err_bool && result.err.kind == AsyncRuntime)
+    {
+        rb_raise(not_supported, "Bloom filter does not support the #delete operation.");
+    }
+
+    return Qnil;
+}
+
 static VALUE bloom_filter_remove(VALUE self, VALUE value)
 {
     Check_Type(value, T_STRING);
@@ -144,6 +175,37 @@ static VALUE atomic_bloom_filter_contains(VALUE self, VALUE value)
     return contains ? Qtrue : Qfalse;
 }
 
+static VALUE atomic_bloom_filter_contains_all(VALUE self, VALUE values)
+{
+    Check_Type(values, T_ARRAY);
+    size_t length = RARRAY_LEN(values);
+    const char **strings = malloc(length * sizeof(char*));
+
+    for (size_t i = 0; i < length; i++)
+    {
+        VALUE value = rb_ary_entry(values, i);
+        Check_Type(value, T_STRING);
+        strings[i] = RSTRING_PTR(value);
+    }
+
+    AtomicBloomFilter *ptr;
+
+    Data_Get_Struct(self, AtomicBloomFilter, ptr);
+
+    BloomResult_bool result = atomic_bloom_contains_all(ptr, strings, length);
+
+    if (result.tag == Ok_bool)
+    {
+        return result.ok ? Qtrue : Qfalse;
+    }
+    else if (result.tag == Err_bool && result.err.kind == AsyncRuntime)
+    {
+        rb_raise(not_supported, "Bloom filter does not support the #delete operation.");
+    }
+
+    return Qnil;
+}
+
 static VALUE atomic_bloom_filter_remove(VALUE self, VALUE value)
 {
     Check_Type(value, T_STRING);
@@ -177,6 +239,7 @@ void Init_bloom_filter() {
     rb_define_method(class, "capacity", bloom_filter_capacity, 0);
     rb_define_method(class, "add", bloom_filter_insert, 1);
     rb_define_method(class, "include?", bloom_filter_contains, 1);
+    rb_define_method(class, "include_all?", bloom_filter_contains_all, 1);
     rb_define_method(class, "delete", bloom_filter_remove, 1);
 
     VALUE atomic_class = rb_define_class_under(module, "AtomicBloomFilter", rb_cObject);
@@ -185,5 +248,6 @@ void Init_bloom_filter() {
     rb_define_method(atomic_class, "capacity", atomic_bloom_filter_capacity, 0);
     rb_define_method(atomic_class, "add", atomic_bloom_filter_insert, 1);
     rb_define_method(atomic_class, "include?", atomic_bloom_filter_contains, 1);
+    rb_define_method(atomic_class, "include_all?", atomic_bloom_filter_contains_all, 1);
     rb_define_method(atomic_class, "delete", atomic_bloom_filter_remove, 1);
 }
