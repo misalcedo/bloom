@@ -19,13 +19,13 @@ Gem::Specification.new do |spec|
   spec.extensions  = ["Rakefile"]
   spec.require_paths = %w[lib target/release]
 
-  spec.add_development_dependency "bundler", "2.2.21"
-  spec.add_development_dependency "rake", "13.0.3"
-  spec.add_development_dependency "rspec", "3.10"
+  spec.add_development_dependency "bundler", ">=2.2"
+  spec.add_development_dependency "rake", ">=13.0"
+  spec.add_development_dependency "rspec", ">=3.10"
 
-  spec.add_runtime_dependency "ffi", "1.15.3"
-  spec.add_runtime_dependency "concurrent-ruby", "1.1.9"
-  spec.add_runtime_dependency "parallel", "1.20.1"
+  spec.add_runtime_dependency "ffi", ">=1.15"
+  spec.add_runtime_dependency "concurrent-ruby", ">=1.1"
+  spec.add_runtime_dependency "parallel", ">=1.20"
 
   spec.requirements << "Rust"
   spec.requirements << "libopenssl"
